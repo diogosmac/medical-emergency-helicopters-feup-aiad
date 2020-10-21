@@ -15,10 +15,10 @@ public class Jade {
         AgentContainer mainContainer = runt.createMainContainer(profile);
         try {
             AgentController hos = mainContainer.createNewAgent("hospital", "HospitalAgent", null);
-            ac.start();
+            hos.start();
 
 
-            AgentController hel = mainContainer.createNewAgent("helicopter", "HelicoterAgent", null);
+            AgentController hel = mainContainer.createNewAgent("helicopter", "HelicopterAgent", null);
             hel.start();
 
 
