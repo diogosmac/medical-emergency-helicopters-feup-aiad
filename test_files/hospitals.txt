@@ -1,0 +1,16 @@
+(x,y)
+(HEART, 10)
+(BRAIN, 60)
+(BURN, 90)
+(BONE, 50)
+
+(20,30)
+(HEART, 30)
+(BRAIN, 70)
+(BONE, 90)
+
+(30,40)
+(HEART, 60)
+(BRAIN, 10)
+(BURN, 40)
+(BONE, 70)

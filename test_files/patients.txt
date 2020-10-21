@@ -1,0 +1,11 @@
+(x,y)
+HEART
+severity
+
+(40,30)
+HEART
+50
+
+(10,30)
+BONE
+10
