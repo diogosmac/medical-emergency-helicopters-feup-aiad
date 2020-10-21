@@ -1,6 +1,6 @@
 import jade.core.Agent;
 
-public class HelipadAgent extends Agent {
+public class PatientAgent extends Agent {
 
     public void setup() {
         // TODO

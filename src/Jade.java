@@ -9,30 +9,21 @@ import jade.wrapper.StaleProxyException;
 public class Jade {
     public static void main(String[] args) {
         Runtime runt = Runtime.instance();
-        Profile p1 = new ProfileImpl();
-        p1.setParameter(Profile.GUI, "true");
+        Profile profile = new ProfileImpl();
+        profile.setParameter(Profile.GUI, "true");
 
-        AgentContainer mainContainer = runt.createMainContainer(p1);
-        AgentController ac;
+        AgentContainer mainContainer = runt.createMainContainer(profile);
         try {
-            ac = mainContainer.createNewAgent("joao", "NewAgent", null);
+            AgentController hos = mainContainer.createNewAgent("hospital", "HospitalAgent", null);
             ac.start();
 
 
-            AgentController ac1 = mainContainer.createNewAgent("continente", "FIPAContractNetInitiatorAgent", null);
-            ac1.start();
+            AgentController hel = mainContainer.createNewAgent("helicopter", "HelicoterAgent", null);
+            hel.start();
 
 
-            AgentController ac2 = mainContainer.createNewAgent("joaom", "FIPAContractNetResponderAgent", null);
-            ac2.start();
-
-
-            AgentController ac3 = mainContainer.createNewAgent("joaop", "FIPAContractNetResponderAgent", null);
-            ac3.start();
-
-
-            AgentController ac4 = mainContainer.createNewAgent("joaov", "FIPAContractNetResponderAgent", null);
-            ac4.start();
+            AgentController pat = mainContainer.createNewAgent("patient", "PatientAgent", null);
+            pat.start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
