@@ -1,0 +1,70 @@
+{
+    helicopters: [
+        {
+            "location":{
+                "x" = "30",
+                "y" = "20"
+            };
+        },
+        {
+            "location":{
+                "x" = "40",
+                "y" = "10"
+            };
+        },
+{
+            "location":{
+                "x" = "50",
+                "y" = "40"
+            };
+        },
+        {
+            "location":{
+                "x" = "0",
+                "y" = "10"
+            };
+        };
+    ],
+    patients: [
+        {
+            "location":{
+                "x" = "30",
+                "y" = "20"
+            },
+            "injury":{
+                "type" = "BONE",
+                "severity" = "20"
+            };
+        },
+        {
+            "location":{
+                "x" = "40",
+                "y" = "10"
+            },
+            "injury":{
+                "type" = "HEART",
+                "severity" = "50"
+            };
+        },
+{
+            "location":{
+                "x" = "50",
+                "y" = "40"
+            },
+            "injury":{
+                "type" = "BRAIN",
+                "severity" = "40"
+            };
+        },
+        {
+            "location":{
+                "x" = "0",
+                "y" = "10"
+            },
+            "injury":{
+                "type" = "BURN",
+                "severity" = "70"
+            };
+        };
+    ];
+}
