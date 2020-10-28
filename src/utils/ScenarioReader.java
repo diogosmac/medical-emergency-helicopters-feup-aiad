@@ -54,11 +54,10 @@ public class ScenarioReader {
                 argList.add(competence);
             }
             String[] args = argList.toArray(String[]::new);
-            HospitalAgent agent = new HospitalAgent();
-            agent.setup(args);
-            AgentController hos = container.acceptNewAgent(
+            AgentController hos = container.createNewAgent(
                     "hospital" + hospitalID++,
-                    agent
+                    HospitalAgent.class.getName(),
+                    args
             );
             hos.start();
         }
@@ -73,11 +72,10 @@ public class ScenarioReader {
             x = location.get("x").toString();
             y = location.get("y").toString();
             String[] args = {x, y};
-            HelicopterAgent agent = new HelicopterAgent();
-            agent.setup(args);
-            AgentController hel = container.acceptNewAgent(
+            AgentController hel = container.createNewAgent(
                     "helicopter" + helicopterID++,
-                    agent
+                    HelicopterAgent.class.getName(),
+                    args
             );
             hel.start();
         }
@@ -95,11 +93,10 @@ public class ScenarioReader {
             injuryType = injury.get("type").toString();
             injurySeverity = injury.get("severity").toString();
             String[] args = {x, y, injuryType, injurySeverity};
-            PatientAgent agent = new PatientAgent();
-            agent.setup(args);
-            AgentController pat = container.acceptNewAgent(
+            AgentController pat = container.createNewAgent(
                     "patient" + patientID++,
-                    agent
+                    PatientAgent.class.getName(),
+                    args
             );
             pat.start();
         }

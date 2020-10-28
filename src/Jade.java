@@ -6,7 +6,9 @@ import jade.wrapper.StaleProxyException;
 import utils.ScenarioReader;
 
 public class Jade {
+
     public static void main(String[] args) {
+
         Runtime runt = Runtime.instance();
         Profile profile = new ProfileImpl();
         profile.setParameter(Profile.GUI, "true");
