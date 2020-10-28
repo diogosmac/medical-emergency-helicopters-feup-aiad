@@ -5,8 +5,8 @@ public class Injury {
     private final InjuryType type;
     private final int severity;
 
-    Injury(InjuryType type, int severity) {
-        this.type = type;
+    public Injury(String type, int severity) {
+        this.type = InjuryType.valueOf(type);
         this.severity = severity;
     }
 
@@ -16,6 +16,10 @@ public class Injury {
 
     public int getSeverity() {
         return severity;
+    }
+
+    public String toString() {
+        return type.toString() + " - " + severity;
     }
 
 }

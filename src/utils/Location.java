@@ -16,4 +16,8 @@ public class Location {
         return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
+
 }

@@ -1,15 +1,15 @@
 package utils;
 
-import helicopter.HelicopterAgent;
-import hospital.HospitalAgent;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import patient.PatientAgent;
 
 import java.io.FileReader;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ScenarioReader {
 
@@ -39,10 +39,37 @@ public class ScenarioReader {
 //        hel.start();
     }
 
-    private static void readPatients(AgentContainer container, JSONObject obj) throws StaleProxyException {
+    private static void readPatients(AgentContainer container, JSONObject obj) {
         JSONArray patients = (JSONArray) obj.get("patients");
-//        AgentController pat = container.createNewAgent("patient", "PatientAgent", null);
-//        pat.start();
+        AtomicInteger patientID = new AtomicInteger(1);
+        patients.iterator().forEachRemaining(element -> {
+            JSONObject patient = (JSONObject) element;
+            String x, y, injuryType, injurySeverity;
+            JSONObject location = (JSONObject) patient.get("location");
+            x = location.get("x").toString();
+            y = location.get("y").toString();
+            JSONObject injury = (JSONObject) patient.get("injury");
+            injuryType = injury.get("type").toString();
+            injurySeverity = injury.get("severity").toString();
+            String[] args = { x, y, injuryType, injurySeverity };
+            try {
+                PatientAgent agent = new PatientAgent();
+                agent.setup(args);
+                AgentController pat = container.acceptNewAgent(
+                        "patient" + patientID,
+                        agent
+                );
+//                AgentController pat = container.createNewAgent(
+//                        "patient" + patientID,
+//                        PatientAgent.class.getName(),
+//                        args
+//                );
+                pat.start();
+            } catch (StaleProxyException e) {
+                e.printStackTrace();
+            }
+            patientID.getAndIncrement();
+        });
     }
 
 }

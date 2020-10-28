@@ -12,7 +12,7 @@ public class Jade {
         profile.setParameter(Profile.GUI, "true");
 
         AgentContainer mainContainer = runt.createMainContainer(profile);
-        String filename = "test_files/file.txt";
+        String filename = "test_files/test1.json";
 
         try {
             ScenarioReader.readScenario(mainContainer, filename);
