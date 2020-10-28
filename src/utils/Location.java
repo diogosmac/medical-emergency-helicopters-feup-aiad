@@ -1,6 +1,6 @@
 package utils;
 
-public class Location {
+public class Location implements java.io.Serializable {
 
     private double x;
     private double y;
