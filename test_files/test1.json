@@ -1,0 +1,134 @@
+{
+  "hospitals":[
+    {
+      "x": 20,
+      "y": 30,
+      "specialties": [
+        {
+          "name": "HEART",
+          "competence": 30
+        },
+        {
+          "name": "BRAIN",
+          "competence": 70
+        },
+        {
+          "name": "BONE",
+          "competence": 70
+        }
+      ]
+    },
+    {
+      "x": 30,
+      "y": 40,
+      "specialties": [
+        {
+          "name": "HEART",
+          "competence": 60
+        },
+        {
+          "name": "BRAIN",
+          "competence": 10
+        },
+        {
+          "name": "BONE",
+          "competence": 70
+        },
+        {
+          "name": "BURN",
+          "competence": 40
+        }
+      ]
+    },
+    {
+      "x": 70,
+      "y": 10,
+      "specialties": [
+        {
+          "name": "HEART",
+          "competence": 60
+        },
+        {
+          "name": "BRAIN",
+          "competence": 10
+        },
+        {
+          "name": "BONE",
+          "competence": 70
+        },
+        {
+          "name": "BURN",
+          "competence": 40
+        }
+      ]
+    }
+  ],
+  "helicopters": [
+    {
+      "location":{
+        "x": 30,
+        "y": 20
+      }
+    },
+    {
+      "location":{
+        "x": 40,
+        "y": 10
+      }
+    },
+    {
+      "location":{
+        "x": 50,
+        "y": 40
+      }
+    },
+    {
+      "location":{
+        "x": 0,
+        "y": 10
+      }
+    }
+  ],
+  "patients": [
+    {
+      "location": {
+        "x": 30,
+        "y": 20
+      },
+      "injury":{
+        "type": "BONE",
+        "severity": "20"
+      }
+    },
+    {
+      "location":{
+        "x": 40,
+        "y": 10
+      },
+      "injury":{
+        "type": "HEART",
+        "severity": 50
+      }
+    },
+    {
+      "location":{
+        "x": 50,
+        "y": 40
+      },
+      "injury":{
+        "type": "BRAIN",
+        "severity": 40
+      }
+    },
+    {
+      "location":{
+        "x": 0,
+        "y": 10
+      },
+      "injury":{
+        "type": "BURN",
+        "severity": 70
+      }
+    }
+  ]
+}
