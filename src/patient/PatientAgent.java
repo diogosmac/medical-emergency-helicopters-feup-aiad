@@ -29,20 +29,17 @@ public class PatientAgent extends Agent {
           - receives reply from helicopters (X time after sending)
           - sends confirmation message to the chosen helicopter
          */
-        System.out.println("Yes I am a patient");
-        System.out.println("I am at location " + this.position.toString());
-        System.out.println("My injury is: " + this.injury.toString() + "\n");
 
         //copied from basic ContractNetInitiator
-        Object[] args = getArguments();
-        if (args != null && args.length > 0) {
-            nResponders = args.length;
+        Object[] cniArguments = getArguments();
+        if (cniArguments != null && cniArguments.length > 0) {
+            nResponders = cniArguments.length;
             System.out.println("Trying to delegate pick-me-up action to one out of " + nResponders + " helicopters.");
 
             // Fill the CFP message
             ACLMessage msg = new ACLMessage(ACLMessage.CFP);
-            for (int i = 0; i < args.length; ++i) {
-                msg.addReceiver(new AID((String) args[i], AID.ISLOCALNAME));
+            for (int i = 0; i < cniArguments.length; ++i) {
+                msg.addReceiver(new AID((String) cniArguments[i], AID.ISLOCALNAME));
             }
             msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
             // We want to receive a reply in 10 secs

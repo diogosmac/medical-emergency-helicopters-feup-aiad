@@ -17,8 +17,7 @@ public class HelicopterAgent extends Agent {
     private Location location;
 
     public void setup(String[] args) {
-        // TODO - read private fields from file
-        System.out.println("Yes I am a helicopter");
+        this.location = new Location(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
 
         System.out.println("Agent "+getLocalName()+" waiting for CFP...");
         MessageTemplate template = MessageTemplate.and(

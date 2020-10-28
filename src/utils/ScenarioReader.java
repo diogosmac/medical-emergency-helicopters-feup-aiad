@@ -1,5 +1,6 @@
 package utils;
 
+import hospital.HospitalAgent;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
@@ -7,11 +8,17 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import patient.PatientAgent;
+import helicopter.HelicopterAgent;
 
 import java.io.FileReader;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScenarioReader {
+
+    private static int hospitalID = 1;
+    private static int helicopterID = 1;
+    private static int patientID = 1;
 
     public static void readScenario(AgentContainer container, String filename) throws StaleProxyException {
         JSONParser parser = new JSONParser();
@@ -29,21 +36,57 @@ public class ScenarioReader {
 
     private static void readHospitals(AgentContainer container, JSONObject obj) throws StaleProxyException {
         JSONArray hospitals = (JSONArray) obj.get("hospitals");
-//        AgentController hos = container.createNewAgent("hospital", "HospitalAgent", null);
-//        hos.start();
+        for (Object o : hospitals) {
+            JSONObject hospital = (JSONObject) o;
+            String x, y;
+            x = hospital.get("x").toString();
+            y = hospital.get("y").toString();
+            List<String> argList = new ArrayList<>();
+            argList.add(x);
+            argList.add(y);
+            JSONArray specialties = (JSONArray) hospital.get("specialties");
+            for (Object spec : specialties) {
+                JSONObject specialty = (JSONObject) spec;
+                String name, competence;
+                name = specialty.get("name").toString();
+                competence = specialty.get("competence").toString();
+                argList.add(name);
+                argList.add(competence);
+            }
+            String[] args = argList.toArray(String[]::new);
+            HospitalAgent agent = new HospitalAgent();
+            agent.setup(args);
+            AgentController hos = container.acceptNewAgent(
+                    "hospital" + hospitalID++,
+                    agent
+            );
+            hos.start();
+        }
     }
 
     private static void readHelicopters(AgentContainer container, JSONObject obj) throws StaleProxyException {
         JSONArray helicopters = (JSONArray) obj.get("helicopters");
-//        AgentController hel = container.createNewAgent("helicopter", "PatientAgent", null);
-//        hel.start();
+        for (Object o : helicopters) {
+            JSONObject helicopter = (JSONObject) o;
+            String x, y;
+            JSONObject location = (JSONObject) helicopter.get("location");
+            x = location.get("x").toString();
+            y = location.get("y").toString();
+            String[] args = {x, y};
+            HelicopterAgent agent = new HelicopterAgent();
+            agent.setup(args);
+            AgentController hel = container.acceptNewAgent(
+                    "helicopter" + helicopterID++,
+                    agent
+            );
+            hel.start();
+        }
     }
 
-    private static void readPatients(AgentContainer container, JSONObject obj) {
+    private static void readPatients(AgentContainer container, JSONObject obj) throws StaleProxyException{
         JSONArray patients = (JSONArray) obj.get("patients");
-        AtomicInteger patientID = new AtomicInteger(1);
-        patients.iterator().forEachRemaining(element -> {
-            JSONObject patient = (JSONObject) element;
+        for (Object o : patients) {
+            JSONObject patient = (JSONObject) o;
             String x, y, injuryType, injurySeverity;
             JSONObject location = (JSONObject) patient.get("location");
             x = location.get("x").toString();
@@ -51,25 +94,15 @@ public class ScenarioReader {
             JSONObject injury = (JSONObject) patient.get("injury");
             injuryType = injury.get("type").toString();
             injurySeverity = injury.get("severity").toString();
-            String[] args = { x, y, injuryType, injurySeverity };
-            try {
-                PatientAgent agent = new PatientAgent();
-                agent.setup(args);
-                AgentController pat = container.acceptNewAgent(
-                        "patient" + patientID,
-                        agent
-                );
-//                AgentController pat = container.createNewAgent(
-//                        "patient" + patientID,
-//                        PatientAgent.class.getName(),
-//                        args
-//                );
-                pat.start();
-            } catch (StaleProxyException e) {
-                e.printStackTrace();
-            }
-            patientID.getAndIncrement();
-        });
+            String[] args = {x, y, injuryType, injurySeverity};
+            PatientAgent agent = new PatientAgent();
+            agent.setup(args);
+            AgentController pat = container.acceptNewAgent(
+                    "patient" + patientID++,
+                    agent
+            );
+            pat.start();
+        }
     }
 
 }
