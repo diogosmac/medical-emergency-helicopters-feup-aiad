@@ -8,6 +8,7 @@ import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
 import jade.domain.FIPANames;
+import utils.Logger;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -39,7 +40,10 @@ public class PatientAgent extends Agent {
         Object[] cniArguments = getArguments();
         if (cniArguments != null && cniArguments.length > 0) {
             nResponders = cniArguments.length;
-            System.out.println("Trying to delegate pick-me-up action to one out of " + nResponders + " helicopters.");
+            String logMessage = getAID().getName() + ": " +
+                    " trying to delegate action [ pick-me-up ]" +
+                    " to one of " + nResponders + " helicopters";
+            Logger.writeLog(logMessage, "Patient");
 
             // Fill the CFP message
             ACLMessage msg = new ACLMessage(ACLMessage.CFP);
@@ -49,26 +53,37 @@ public class PatientAgent extends Agent {
             msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
             // We want to receive a reply in 10 secs
             msg.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
-            msg.setContent("Send me yor location.");
+            msg.setContent("Send me your location.");
 
             addBehaviour(new ContractNetInitiator(this, msg) {
 
                 protected void handlePropose(ACLMessage propose, Vector v) {
-                    System.out.println("Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
+                    String logMessage = myAgent.getAID().getName() + ": " +
+                            " received proposal [" + propose.getContent() +
+                            "] from " + propose.getSender().getName();
+                    Logger.writeLog(logMessage, "Patient");
                 }
 
                 protected void handleRefuse(ACLMessage refuse) {
-                    System.out.println("Agent "+refuse.getSender().getName()+" refused");
+                    String logMessage = myAgent.getAID().getName() + ": " +
+                            " received refusal [" + refuse.getContent() +
+                            "] from " + refuse.getSender().getName();
+                    Logger.writeLog(logMessage, "Patient");
                 }
 
                 protected void handleFailure(ACLMessage failure) {
                     if (failure.getSender().equals(myAgent.getAMS())) {
                         // FAILURE notification from the JADE runtime: the receiver
                         // does not exist
-                        System.out.println("Responder does not exist");
+                        String logMessage = myAgent.getAID().getName() + ": " +
+                                " responder does not exist";
+                        Logger.writeLog(logMessage, "Patient");
                     }
                     else {
-                        System.out.println("Agent "+failure.getSender().getName()+" failed");
+                        String logMessage = myAgent.getAID().getName() + ": " +
+                                " received failure [" + failure.getContent() +
+                                "] from " + failure.getSender().getName();
+                        Logger.writeLog(logMessage, "Patient");
                     }
                     // Immediate failure --> we will not receive a response from this agent
                     nResponders--;
@@ -107,13 +122,18 @@ public class PatientAgent extends Agent {
                     }
                     // Accept the proposal of the best proposer
                     if (accept != null) {
-                        System.out.println("Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
+                        String logMessage = myAgent.getAID().getName() + ": " +
+                                " accepting proposal [" + bestProposal +
+                                "] from " + bestProposer.getName();
+                        Logger.writeLog(logMessage, "Patient");
                         accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
                     }
                 }
 
                 protected void handleInform(ACLMessage inform) {
-                    System.out.println("Agent "+inform.getSender().getName()+" successfully performed the requested action");
+                    String logMessage = myAgent.getAID().getName() + ": " +
+                            "Agent " + inform.getSender().getName() + " successfully performed the requested action";
+                    Logger.writeLog(logMessage, "Patient");
                 }
             } );
         }
