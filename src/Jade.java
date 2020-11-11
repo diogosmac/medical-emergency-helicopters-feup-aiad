@@ -10,29 +10,24 @@ public class Jade {
 
     public static void main(String[] args) {
 
-        boolean testOnly = false;
-
-        if (args.length < 1 || args.length > 2) {
+        if (args.length != 5) {
             System.out.println(
-                    "Usage: java MedicalEmergencyHelicopters <json-file> [ <test> ]\n" +
-                    "       json-file:  path to file containing helicopters, hospitals and patients\n" +
+                    "Usage: java MedicalEmergencyHelicopters -gui -name <name> <json-file> [ <test> ]\n" +
+                    "       name:       name of the program\n" +
+                    "       json-file:  path to file (from test_files directory) containing helicopters, hospitals and patients\n" +
                     "       test:       FALSE (default) if logger should document execution, TRUE if testing only"
             );
             System.exit(1);
         }
 
-        if (args.length == 2) {
-            testOnly = Boolean.parseBoolean(args[1]);
-        }
-
-        Logger.init(testOnly);
+        Logger.init(Boolean.parseBoolean(args[4]));
 
         Runtime runt = Runtime.instance();
         Profile profile = new ProfileImpl();
         profile.setParameter(Profile.GUI, "true");
 
         AgentContainer mainContainer = runt.createMainContainer(profile);
-        String filename = "test_files/test1.json";
+        String filename = "test_files/" + args[3];
 
         try {
             ScenarioReader.readScenario(mainContainer, filename);

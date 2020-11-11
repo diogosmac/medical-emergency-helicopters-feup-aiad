@@ -9,6 +9,7 @@ import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.FailureException;
+import utils.Logger;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -24,7 +25,10 @@ public class HelicopterAgent extends Agent {
 
         this.location = new Location(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
 
-        System.out.println("Agent "+getLocalName()+" waiting for CFP...");
+        String logMessage = getLocalName() + ": " +
+                " waiting for CFP ...";
+        Logger.writeLog(logMessage, "Helicopter");
+
         MessageTemplate template = MessageTemplate.and(
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
                 MessageTemplate.MatchPerformative(ACLMessage.CFP) );
@@ -32,10 +36,17 @@ public class HelicopterAgent extends Agent {
         addBehaviour(new ContractNetResponder(this, template) {
             @Override
             protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-                System.out.println("Agent " + getLocalName() + ": CFP received from " + cfp.getSender().getName() + ". Action is " + cfp.getContent());
+                String logMessage = getLocalName() + ": " +
+                        " received CFP [" + cfp.getContent() +
+                        "] from " + cfp.getSender().getName();
+                Logger.writeLog(logMessage, "Helicopter");
+
                 // We provide a proposal
                 Location proposal = location;
-                System.out.println("Agent " + getLocalName() + ": Proposing " + proposal);
+                logMessage = getLocalName() + ": " +
+                        " sending proposal [" + proposal + "]";
+                Logger.writeLog(logMessage, "Helicopter");
+
                 ACLMessage propose = cfp.createReply();
                 propose.setPerformative(ACLMessage.PROPOSE);
                 //TO DO - decent try catch
@@ -49,21 +60,30 @@ public class HelicopterAgent extends Agent {
 
             @Override
             protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose,ACLMessage accept) throws FailureException {
-                System.out.println("Agent "+getLocalName()+": Proposal accepted");
+                String logMessage = getLocalName() + ": " +
+                        " accepted proposal";
+                Logger.writeLog(logMessage, "Helicopter");
                 if (performAction()) {
-                    System.out.println("Agent "+getLocalName()+": Action successfully performed");
+                    logMessage = getLocalName() + ": " +
+                            " performed action successfully";
+                    Logger.writeLog(logMessage, "Helicopter");
+
                     ACLMessage inform = accept.createReply();
                     inform.setPerformative(ACLMessage.INFORM);
                     return inform;
                 }
                 else {
-                    System.out.println("Agent "+getLocalName()+": Action execution failed");
+                    logMessage = getLocalName() + ": " +
+                        " failed action execution";
+                    Logger.writeLog(logMessage, "Helicopter");
                     throw new FailureException("unexpected-error");
                 }
             }
 
             protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
-                System.out.println("Agent "+getLocalName()+": Proposal rejected");
+                String logMessage = getLocalName() + ": " +
+                        " proposal rejected";
+                Logger.writeLog(logMessage, "Helicopter");
             }
         } );
     }

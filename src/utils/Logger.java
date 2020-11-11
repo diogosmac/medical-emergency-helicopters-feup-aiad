@@ -35,8 +35,8 @@ public class Logger {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String now = dateFormat.format(timestamp);
         
-        String logsDirectory = "../../logs";    // exit utils package and exit src directory to get to project root
-                                                // then create logs directory in project root
+        String logsDirectory = "/logs";     // exit utils package and exit src directory to get to project root
+                                            // then create logs directory in project root
         String helicoptersFile = makeFileName(logsDirectory, "helicopters", now);
         String hospitalsFile = makeFileName(logsDirectory, "hospitals", now);
         String patientsFile = makeFileName(logsDirectory, "patients", now);
