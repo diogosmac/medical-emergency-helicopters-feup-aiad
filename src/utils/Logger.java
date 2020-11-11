@@ -23,7 +23,7 @@ public class Logger {
     private static Path outputPatients;     // path to file where patient messages will be logged
     
     private static String makeFileName(String directory, String category, String now) {
-        return directory + category + "-" + now + fileExtension;
+        return directory + now + "-" + category + fileExtension;
     }
     
     public static void init(boolean test) {
@@ -35,7 +35,7 @@ public class Logger {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String now = dateFormat.format(timestamp);
         
-        String logsDirectory = "/logs";     // exit utils package and exit src directory to get to project root
+        String logsDirectory = "logs/";     // exit utils package and exit src directory to get to project root
                                             // then create logs directory in project root
         String helicoptersFile = makeFileName(logsDirectory, "helicopters", now);
         String hospitalsFile = makeFileName(logsDirectory, "hospitals", now);
@@ -44,7 +44,8 @@ public class Logger {
         File directory = new File(logsDirectory);
         if (!directory.exists()) {
             if (!directory.mkdir()) {
-                System.out.println("Error occurred when trying to log execution of the program.");
+                System.out.println("Error occurred when trying to create " + logsDirectory + " directory.");
+                testOnly = true;
                 return;
             }
         }
