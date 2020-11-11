@@ -11,12 +11,17 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.FailureException;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class HelicopterAgent extends Agent {
 
     private Location location;
 
-    public void setup(String[] args) {
+    public void setup() {
+
+        Object[] objArgs = getArguments();
+        String[] args = Arrays.copyOf(objArgs, objArgs.length, String[].class);
+
         this.location = new Location(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
 
         System.out.println("Agent "+getLocalName()+" waiting for CFP...");

@@ -8,6 +8,8 @@ import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
 import jade.domain.FIPANames;
+
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Vector;
 import java.util.Enumeration;
@@ -18,7 +20,10 @@ public class PatientAgent extends Agent {
     private Location position;
     private int nResponders;
 
-    public void setup(String[] args) {
+    public void setup() {
+
+        Object[] objArgs = getArguments();
+        String[] args = Arrays.copyOf(objArgs, objArgs.length, String[].class);
 
         String x = args[0], y = args[1], injuryType = args[2], injurySeverity = args[3];
         this.injury = new Injury(injuryType, Integer.parseInt(injurySeverity));
