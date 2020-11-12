@@ -8,6 +8,7 @@ import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetInitiator;
 import utils.Location;
 
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -61,11 +62,13 @@ public class PatientNetInitiator extends ContractNetInitiator {
     }
 
     protected void handleAllResponses(Vector responses, Vector acceptances) {
+
         if (responses.size() < nResponders) {
             // Some responder didn't reply within the specified timeout
             //TODO change logger accordingly
             System.out.println("Timeout expired: missing "+(nResponders - responses.size())+" responses");
         }
+
         // Evaluate proposals.
         double bestProposal = Double.POSITIVE_INFINITY;
         AID bestProposer = null;
@@ -78,6 +81,8 @@ public class PatientNetInitiator extends ContractNetInitiator {
                 reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
                 acceptances.addElement(reply);
                 Location proposal = null;
+
+                //TODO decent try catch
                 try {
                     proposal = (Location)(msg.getContentObject());
                     double distance = proposal.getDistance(patient.getPosition());
@@ -94,13 +99,19 @@ public class PatientNetInitiator extends ContractNetInitiator {
         // Accept the proposal of the best proposer
         if (accept != null) {
             //TODO change logger accordingly
-            System.out.println("Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
+            System.out.println("Accepting proposal " + bestProposal + " from responder " + bestProposer.getName());
             accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+            //TODO - decent try catch
+            try {
+                accept.setContentObject(patient.getInjuryType());
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
     }
 
     protected void handleInform(ACLMessage inform) {
         //TODO change logger accordingly
-        System.out.println("Agent "+inform.getSender().getName()+" successfully performed the requested action");
+        System.out.println("Agent " + inform.getSender().getName() + " successfully performed the requested action");
     }
 }

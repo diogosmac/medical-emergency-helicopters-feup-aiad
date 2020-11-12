@@ -1,5 +1,6 @@
 package helicopter;
 
+import injury.Injury;
 import injury.InjuryType;
 import jade.core.AID;
 import jade.core.Agent;
@@ -102,9 +103,8 @@ public class HelicopterAgent extends Agent {
         // Log end of service
     }
 
-    protected boolean performAction() {
-        //TODO  - change this accordingly
-        patientInjuryType = InjuryType.HEART;
+    protected boolean performAction(InjuryType injuryType) {
+        patientInjuryType = injuryType;
 
         this.dfSearch();
 
