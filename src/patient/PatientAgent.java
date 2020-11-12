@@ -6,12 +6,9 @@ import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
-import jade.lang.acl.UnreadableException;
 import utils.AgentType;
 import utils.Location;
 import jade.lang.acl.ACLMessage;
-import jade.proto.ContractNetInitiator;
-import jade.domain.FIPANames;
 import utils.Logger;
 
 import java.util.Arrays;
@@ -19,15 +16,9 @@ import java.util.Arrays;
 //TODO assign id and responders
 public class PatientAgent extends Agent {
 
-    private String id;
     private Injury injury;
     private Location position;
     private Object[] responders;
-
-    public String getId() {
-        return id;
-    }
-
 
     public Injury getInjury() {
         return injury;

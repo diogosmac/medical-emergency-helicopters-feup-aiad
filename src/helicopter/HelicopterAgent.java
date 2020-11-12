@@ -1,6 +1,5 @@
 package helicopter;
 
-import hospital.HospitalAgent;
 import injury.InjuryType;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -10,27 +9,16 @@ import utils.AgentType;
 import utils.Location;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.ContractNetResponder;
-import jade.domain.FIPANames;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
-import jade.domain.FIPAAgentManagement.RefuseException;
-import jade.domain.FIPAAgentManagement.FailureException;
 import utils.Logger;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 //TODO assign id and responders
 public class HelicopterAgent extends Agent {
 
-    private String id;
     private Location location;
     private Object[] responders;
     private InjuryType patientInjuryType;
-
-    public String getId() {
-        return id;
-    }
 
     public Location getLocation() {
         return location;

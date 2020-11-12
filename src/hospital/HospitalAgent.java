@@ -1,15 +1,11 @@
 package hospital;
 
-import injury.Injury;
 import injury.InjuryType;
 import jade.core.Agent;
-import jade.core.behaviours.Behaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
-import jade.lang.acl.ACLMessage;
-import jade.proto.SubscriptionInitiator;
 import utils.AgentType;
 import utils.Location;
 
@@ -19,13 +15,8 @@ import java.util.EnumMap;
 //TODO assign id
 public class HospitalAgent extends Agent {
 
-    private String id;
     private Location location;
     private EnumMap<InjuryType, Integer> levelOfCompetence;
-
-    public String getId(){
-        return id;
-    }
 
     public Location getLocation() {
         return location;
