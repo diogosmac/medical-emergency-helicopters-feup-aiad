@@ -15,7 +15,16 @@ import java.util.Arrays;
 
 public class HelicopterAgent extends Agent {
 
+    private String id;
     private Location location;
+
+    public String getId() {
+        return id;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
 
     public void setup() {
 

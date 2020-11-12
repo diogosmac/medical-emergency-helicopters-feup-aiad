@@ -9,8 +9,13 @@ import java.util.EnumMap;
 
 public class HospitalAgent extends Agent {
 
+    private String id;
     private Location location;
     private EnumMap<InjuryType, Integer> levelOfCompetence;
+
+    public String getId(){
+        return id;
+    }
 
     public void setup() {
 
