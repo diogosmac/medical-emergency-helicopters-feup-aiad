@@ -1,5 +1,6 @@
 package hospital;
 
+import injury.Injury;
 import injury.InjuryType;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
@@ -15,10 +16,24 @@ import utils.Location;
 import java.util.Arrays;
 import java.util.EnumMap;
 
+//TODO assign id
 public class HospitalAgent extends Agent {
 
+    private String id;
     private Location location;
     private EnumMap<InjuryType, Integer> levelOfCompetence;
+
+    public String getId(){
+        return id;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Integer getLevelOfCompetenceForInjuryType(InjuryType injuryType){
+        return levelOfCompetence.get(injuryType);
+    }
 
     public void setup() {
 
@@ -68,4 +83,8 @@ public class HospitalAgent extends Agent {
         // Log end of service
     }
 
+    protected boolean performAction() {
+        //TODO  - do something here
+        return true;
+    }
 }

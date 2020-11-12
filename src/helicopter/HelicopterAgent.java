@@ -1,5 +1,7 @@
 package helicopter;
 
+import hospital.HospitalAgent;
+import injury.InjuryType;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
@@ -18,9 +20,29 @@ import utils.Logger;
 import java.io.IOException;
 import java.util.Arrays;
 
+//TODO assign id and responders
 public class HelicopterAgent extends Agent {
 
+    private String id;
     private Location location;
+    private Object[] responders;
+    private InjuryType patientInjuryType;
+
+    public String getId() {
+        return id;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Object[] getResponders(){
+        return responders;
+    }
+
+    public InjuryType getPatientInjuryType(){
+        return patientInjuryType;
+    }
 
     public Location getLocation() {
         return location;
@@ -37,73 +59,15 @@ public class HelicopterAgent extends Agent {
                 " waiting for CFP ...";
         Logger.writeLog(logMessage, "Helicopter");
 
-        MessageTemplate template = MessageTemplate.and(
-                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
-                MessageTemplate.MatchPerformative(ACLMessage.CFP) );
-
         if (!this.dfRegister()) {
             //  log unsuccessful dfregister
+            logMessage = getLocalName() + ": " +
+                    " unsuccessful dfregister!!";
+            Logger.writeLog(logMessage, "Helicopter");
         }
 
-        // Maybe use EmergencyCallBehaviour class?
-        addBehaviour(new ContractNetResponder(this, template) {
-            @Override
-            protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-                String logMessage = getLocalName() + ": " +
-                        " received CFP [" + cfp.getContent() +
-                        "] from " + cfp.getSender().getName();
-                Logger.writeLog(logMessage, "Helicopter");
+        addBehaviour(new HelicopterNetResponder(this, MessageTemplate.MatchPerformative(ACLMessage.CFP)));
 
-                // We provide a proposal
-                Location proposal = location;
-                logMessage = getLocalName() + ": " +
-                        " sending proposal [" + proposal + "]";
-                Logger.writeLog(logMessage, "Helicopter");
-
-                ACLMessage propose = cfp.createReply();
-                propose.setPerformative(ACLMessage.PROPOSE);
-                //TO DO - decent try catch
-                try {
-                    propose.setContentObject(proposal);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return propose;
-            }
-
-            @Override
-            protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose,ACLMessage accept) throws FailureException {
-                String logMessage = getLocalName() + ": " +
-                        " accepted proposal";
-                Logger.writeLog(logMessage, "Helicopter");
-                if (performAction()) {
-                    logMessage = getLocalName() + ": " +
-                            " performed action successfully";
-                    Logger.writeLog(logMessage, "Helicopter");
-
-                    ACLMessage inform = accept.createReply();
-                    inform.setPerformative(ACLMessage.INFORM);
-                    return inform;
-                }
-                else {
-                    logMessage = getLocalName() + ": " +
-                        " failed action execution";
-                    Logger.writeLog(logMessage, "Helicopter");
-                    throw new FailureException("unexpected-error");
-                }
-            }
-
-            protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
-                String logMessage = getLocalName() + ": " +
-                        " proposal rejected";
-                Logger.writeLog(logMessage, "Helicopter");
-            }
-        } );
-    }
-
-    // TO DO  - wtf goes in here? -> this should trigger the "call to hospitals" behaviour
-    public boolean performAction() {
-        return true;
     }
 
     private boolean dfRegister() {
@@ -149,6 +113,20 @@ public class HelicopterAgent extends Agent {
             e.printStackTrace();
         }
         // Log end of service
+    }
+
+
+    protected boolean performAction() {
+        //TODO  - change this accordingly
+        patientInjuryType = InjuryType.HEART;
+        addBehaviour(new HelicopterNetInitiator(this, responders.length, new ACLMessage(ACLMessage.CFP)));
+
+        return true;
+    }
+
+    //TODO decent utility function
+    protected int hospitalEvaluation(double distance, Integer levelOfCompetence){
+        return 1;
     }
 
 }
