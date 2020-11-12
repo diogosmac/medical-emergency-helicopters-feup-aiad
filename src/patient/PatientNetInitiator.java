@@ -11,13 +11,13 @@ import utils.Location;
 import java.util.Enumeration;
 import java.util.Vector;
 
-public class PatientSendRequestHelicopters extends ContractNetInitiator {
+public class PatientNetInitiator extends ContractNetInitiator {
 
     private PatientAgent patient;
     private int nResponders;
 
-    public PatientSendRequestHelicopters(Agent a, int nResponders, ACLMessage cfp) {
-        super(a, cfp);
+    public PatientNetInitiator(PatientAgent patient, int nResponders, ACLMessage cfp) {
+        super(patient, cfp);
         this.patient = patient;
         this.nResponders = nResponders;
     }
