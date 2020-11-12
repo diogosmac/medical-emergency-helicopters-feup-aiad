@@ -44,10 +44,6 @@ public class HelicopterAgent extends Agent {
         return patientInjuryType;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
     public void setup() {
 
         Object[] objArgs = getArguments();
