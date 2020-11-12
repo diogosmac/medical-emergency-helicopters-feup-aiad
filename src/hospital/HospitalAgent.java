@@ -2,6 +2,14 @@ package hospital;
 
 import injury.InjuryType;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
+import jade.proto.SubscriptionInitiator;
+import utils.AgentType;
 import utils.Location;
 
 import java.util.Arrays;
@@ -29,6 +37,35 @@ public class HospitalAgent extends Agent {
             this.levelOfCompetence.put(type, level);
         }
 
+        if (!this.dfRegister()) {
+            //  log unsuccessful dfregister
+        }
+    }
+
+    private boolean dfRegister() {
+        DFAgentDescription dfAgentDescription = new DFAgentDescription();
+        dfAgentDescription.setName(getAID());
+        ServiceDescription serviceDescription = new ServiceDescription();
+        serviceDescription.setType(AgentType.HOSPITAL);
+        serviceDescription.setName(getLocalName());
+        dfAgentDescription.addServices(serviceDescription);
+        try {
+            DFService.register(this, dfAgentDescription);
+        } catch(FIPAException fe) {
+            fe.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    protected void takeDown() {
+        try {
+            DFService.deregister(this);
+        } catch(FIPAException e) {
+            e.printStackTrace();
+        }
+        // Log end of service
     }
 
 }
