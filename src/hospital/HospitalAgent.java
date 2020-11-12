@@ -12,7 +12,6 @@ import utils.Location;
 import java.util.Arrays;
 import java.util.EnumMap;
 
-//TODO assign id
 public class HospitalAgent extends Agent {
 
     private Location location;

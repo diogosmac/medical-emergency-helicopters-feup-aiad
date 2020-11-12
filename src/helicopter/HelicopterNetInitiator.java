@@ -35,8 +35,7 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
         }
 
         for (int i = 0; i < nResponders; i++) {
-            //TODO change this implementation
-            cfp.addReceiver(new AID(helicopter.getName(), false));
+            cfp.addReceiver(helicopter.getResponders().get(i));
             //TODO change logger accordingly
             //this.candidate.logger.info("SENT:      " + cfp.getContent() + " TO: " + candidate.getChiefsOfStaff().get(i));
         }

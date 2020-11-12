@@ -26,8 +26,7 @@ public class PatientNetInitiator extends ContractNetInitiator {
         Vector v = new Vector();
         cfp.setContent("What is your location?");
         for (int i = 0; i < nResponders; i++) {
-            //TODO change this implementation
-            cfp.addReceiver(new AID(patient.getName(), false));
+            cfp.addReceiver(patient.getResponders().get(i));
             //TODO change logger accordingly
             //this.candidate.logger.info("SENT:      " + cfp.getContent() + " TO: " + candidate.getChiefsOfStaff().get(i));
         }

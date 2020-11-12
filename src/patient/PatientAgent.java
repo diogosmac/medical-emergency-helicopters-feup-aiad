@@ -1,6 +1,7 @@
 package patient;
 
 import injury.Injury;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -11,20 +12,20 @@ import utils.Location;
 import jade.lang.acl.ACLMessage;
 import utils.Logger;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
-//TODO assign id and responders
 public class PatientAgent extends Agent {
 
     private Injury injury;
     private Location position;
-    private Object[] responders;
+    private ArrayList<AID> responders = new ArrayList<AID>();
 
     public Injury getInjury() {
         return injury;
     }
 
-    public Object[] getResponders(){
+    public ArrayList<AID> getResponders(){
         return responders;
     }
 
@@ -43,16 +44,8 @@ public class PatientAgent extends Agent {
 
         this.dfSearch();
 
-        /*
-          TODO:
-          - sends message to all helicopters
-          - receives reply from helicopters (X time after sending)
-          - sends confirmation message to the chosen helicopter
-         */
-
-        responders = getArguments();
-        if (responders != null && responders.length > 0) {
-            int nResponders = responders.length;
+        if (responders != null && responders.size() > 0) {
+            int nResponders = responders.size();
             String logMessage = getAID().getName() + ": " +
                     " trying to delegate action [ pick-me-up ]" +
                     " to one of " + nResponders + " helicopters";
@@ -75,6 +68,7 @@ public class PatientAgent extends Agent {
             for(int i=0; i<result.length; ++i) {
                 System.out.println("Found " + result[i].getName());
                 // Add to list and/to initiate ContractNet to each one of them
+                responders.add(result[i].getName());
             }
         } catch(FIPAException fe) {
             fe.printStackTrace();

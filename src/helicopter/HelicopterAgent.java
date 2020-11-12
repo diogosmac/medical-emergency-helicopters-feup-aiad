@@ -1,6 +1,7 @@
 package helicopter;
 
 import injury.InjuryType;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
@@ -11,23 +12,24 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import utils.Logger;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
-//TODO assign id and responders
 public class HelicopterAgent extends Agent {
 
     private Location location;
-    private Object[] responders;
+    private ArrayList<AID> responders = new ArrayList<>();
     private InjuryType patientInjuryType;
 
     public Location getLocation() {
         return location;
     }
 
-    public Object[] getResponders(){
+    public ArrayList<AID> getResponders(){
         return responders;
     }
 
+    //TODO get corrent patientInjuryType
     public InjuryType getPatientInjuryType(){
         return patientInjuryType;
     }
@@ -82,6 +84,7 @@ public class HelicopterAgent extends Agent {
             for(int i=0; i<result.length; ++i) {
                 System.out.println("Found " + result[i].getName());
                 // Add to list and/to initiate ContractNet to each one of them
+                responders.add(result[i].getName());
             }
         } catch(FIPAException fe) {
             fe.printStackTrace();
@@ -99,11 +102,23 @@ public class HelicopterAgent extends Agent {
         // Log end of service
     }
 
-
     protected boolean performAction() {
         //TODO  - change this accordingly
         patientInjuryType = InjuryType.HEART;
-        addBehaviour(new HelicopterNetInitiator(this, responders.length, new ACLMessage(ACLMessage.CFP)));
+
+        this.dfSearch();
+
+        if (responders != null && responders.size() > 0) {
+            int nResponders = responders.size();
+            String logMessage = getAID().getName() + ": " +
+                    " trying to delegate action [ treat-my-patient ]" +
+                    " to one of " + nResponders + " hospitals";
+            Logger.writeLog(logMessage, "Patient");
+            addBehaviour(new HelicopterNetInitiator(this, nResponders, new ACLMessage(ACLMessage.CFP)));
+        }
+        else {
+            System.out.println("No responder specified.");
+        }
 
         return true;
     }
