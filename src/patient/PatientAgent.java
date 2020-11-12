@@ -53,14 +53,16 @@ public class PatientAgent extends Agent {
         responders = getArguments();
         if (responders != null && responders.length > 0) {
             int nResponders = responders.length;
-            String logMessage = getAID().getName() + ": " +
+            String logMessage = getLocalName() + ": " +
                     " trying to delegate action [ pick-me-up ]" +
                     " to one of " + nResponders + " helicopters";
             Logger.writeLog(logMessage, "Patient");
             addBehaviour(new PatientNetInitiator(this, nResponders, new ACLMessage(ACLMessage.CFP)));
         }
         else {
-            System.out.println("No responder specified.");
+            String logMessage = getLocalName() + ": " +
+                    " no responder specified";
+            Logger.writeLog(logMessage, "Patient");
         }
 
     }
@@ -72,8 +74,10 @@ public class PatientAgent extends Agent {
         template.addServices(serviceDescription);
         try {
             DFAgentDescription[] result = DFService.search(this, template);
-            for(int i=0; i<result.length; ++i) {
-                System.out.println("Found " + result[i].getName());
+            for (DFAgentDescription dfAgentDescription : result) {
+                String logMessage = getLocalName() + ": " +
+                        "found [ " + dfAgentDescription.getName() + " ]";
+                Logger.writeLog(logMessage, "Patient");
                 // Add to list and/to initiate ContractNet to each one of them
             }
         } catch(FIPAException fe) {
