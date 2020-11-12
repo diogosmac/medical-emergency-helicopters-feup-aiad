@@ -28,9 +28,6 @@ public class PatientAgent extends Agent {
         return id;
     }
 
-    public Location getPosition() {
-        return position;
-    }
 
     public Injury getInjury() {
         return injury;
@@ -42,14 +39,6 @@ public class PatientAgent extends Agent {
 
     public Location getPosition() {
         return position;
-    }
-
-    public int getnResponders() {
-        return nResponders;
-    }
-
-    public void setnResponders(int nResponders) {
-        this.nResponders = nResponders;
     }
 
     public void setup() {
