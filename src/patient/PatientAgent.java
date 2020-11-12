@@ -5,6 +5,7 @@ import jade.core.Agent;
 import utils.Location;
 import jade.lang.acl.ACLMessage;
 
+//TODO assign id and responders
 import java.util.Arrays;
 
 public class PatientAgent extends Agent {
@@ -49,7 +50,7 @@ public class PatientAgent extends Agent {
         if (responders != null && responders.length > 0) {
             int nResponders = responders.length;
             System.out.println("Trying to delegate pick-me-up action to one out of " + nResponders + " helicopters.");
-            addBehaviour(new PatientSendRequestHelicopters(this, nResponders, new ACLMessage(ACLMessage.CFP)));
+            addBehaviour(new PatientNetInitiator(this, nResponders, new ACLMessage(ACLMessage.CFP)));
         }
         else {
             System.out.println("No responder specified.");
