@@ -1,14 +1,15 @@
 package helicopter;
 
 import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.*;
+import jade.domain.FIPAException;
+import utils.AgentType;
 import utils.Location;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetResponder;
 import jade.domain.FIPANames;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
-import jade.domain.FIPAAgentManagement.RefuseException;
-import jade.domain.FIPAAgentManagement.FailureException;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -16,6 +17,10 @@ import java.util.Arrays;
 public class HelicopterAgent extends Agent {
 
     private Location location;
+
+    public Location getLocation() {
+        return location;
+    }
 
     public void setup() {
 
@@ -29,6 +34,11 @@ public class HelicopterAgent extends Agent {
                 MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
                 MessageTemplate.MatchPerformative(ACLMessage.CFP) );
 
+        if (!this.dfRegister()) {
+            //  log unsuccessful dfregister
+        }
+
+        // Maybe use EmergencyCallBehaviour class?
         addBehaviour(new ContractNetResponder(this, template) {
             @Override
             protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
@@ -68,8 +78,54 @@ public class HelicopterAgent extends Agent {
         } );
     }
 
-    // TO DO  - wtf goes in here?
-    private boolean performAction() {
+    // TO DO  - wtf goes in here? -> this should trigger the "call to hospitals" behaviour
+    public boolean performAction() {
         return true;
     }
+
+    private boolean dfRegister() {
+        DFAgentDescription dfAgentDescription = new DFAgentDescription();
+        dfAgentDescription.setName(getAID());
+        ServiceDescription serviceDescription = new ServiceDescription();
+        serviceDescription.setType(AgentType.HELICOPTER);
+        serviceDescription.setName(getLocalName());
+        dfAgentDescription.addServices(serviceDescription);
+        try {
+            DFService.register(this, dfAgentDescription);
+        } catch(FIPAException fe) {
+            fe.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    // Add a subscription?? (be notified when there's a new hospital)
+    private boolean dfSearch() {
+        DFAgentDescription template = new DFAgentDescription();
+        ServiceDescription serviceDescription = new ServiceDescription();
+        serviceDescription.setType(AgentType.HOSPITAL);
+        template.addServices(serviceDescription);
+        try {
+            DFAgentDescription[] result = DFService.search(this, template);
+            for(int i=0; i<result.length; ++i) {
+                System.out.println("Found " + result[i].getName());
+                // Add to list and/to initiate ContractNet to each one of them
+            }
+        } catch(FIPAException fe) {
+            fe.printStackTrace();
+        }
+
+        return true;
+    }
+
+    protected void takeDown() {
+        try {
+            DFService.deregister(this);
+        } catch(FIPAException e) {
+            e.printStackTrace();
+        }
+        // Log end of service
+    }
+
 }
