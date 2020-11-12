@@ -2,7 +2,12 @@ package patient;
 
 import injury.Injury;
 import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import jade.lang.acl.UnreadableException;
+import utils.AgentType;
 import utils.Location;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
@@ -20,6 +25,18 @@ public class PatientAgent extends Agent {
     private Location position;
     private int nResponders;
 
+    public Location getPosition() {
+        return position;
+    }
+
+    public int getnResponders() {
+        return nResponders;
+    }
+
+    public void setnResponders(int nResponders) {
+        this.nResponders = nResponders;
+    }
+
     public void setup() {
 
         Object[] objArgs = getArguments();
@@ -28,6 +45,9 @@ public class PatientAgent extends Agent {
         String x = args[0], y = args[1], injuryType = args[2], injurySeverity = args[3];
         this.injury = new Injury(injuryType, Integer.parseInt(injurySeverity));
         this.position = new Location(Integer.parseInt(x), Integer.parseInt(y));
+
+        this.dfSearch();
+
         /*
           TODO:
           - sends message to all helicopters
@@ -49,8 +69,10 @@ public class PatientAgent extends Agent {
             msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
             // We want to receive a reply in 10 secs
             msg.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
-            msg.setContent("Send me yor location.");
+            msg.setContent("Send me your location.");
 
+
+            // Use CallHelpBehaviour class?
             addBehaviour(new ContractNetInitiator(this, msg) {
 
                 protected void handlePropose(ACLMessage propose, Vector v) {
@@ -121,6 +143,24 @@ public class PatientAgent extends Agent {
             System.out.println("No responder specified.");
         }
 
+    }
+
+    private boolean dfSearch() {
+        DFAgentDescription template = new DFAgentDescription();
+        ServiceDescription serviceDescription = new ServiceDescription();
+        serviceDescription.setType(AgentType.HELICOPTER);
+        template.addServices(serviceDescription);
+        try {
+            DFAgentDescription[] result = DFService.search(this, template);
+            for(int i=0; i<result.length; ++i) {
+                System.out.println("Found " + result[i].getName());
+                // Add to list and/to initiate ContractNet to each one of them
+            }
+        } catch(FIPAException fe) {
+            fe.printStackTrace();
+        }
+
+        return true;
     }
     
 }
