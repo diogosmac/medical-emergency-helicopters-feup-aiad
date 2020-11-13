@@ -1,7 +1,5 @@
 package utils;
 
-import injury.Injury;
-
 public class HospitalProposal implements java.io.Serializable{
 
     private final Location location;

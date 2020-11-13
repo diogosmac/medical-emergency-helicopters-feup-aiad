@@ -47,10 +47,12 @@ public class PatientAgent extends Agent {
 
         if (responders != null && responders.size() > 0) {
             int nResponders = responders.size();
+
             String logMessage = getAID().getName() + ": " +
                     " trying to delegate action [ pick-me-up ]" +
                     " to one of " + nResponders + " helicopters";
             Logger.writeLog(logMessage, "Patient");
+
             addBehaviour(new PatientNetInitiator(this, nResponders, new ACLMessage(ACLMessage.CFP)));
         }
         else {
