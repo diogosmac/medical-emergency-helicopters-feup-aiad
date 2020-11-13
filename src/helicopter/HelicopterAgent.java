@@ -128,7 +128,7 @@ public class HelicopterAgent extends Agent {
 
     public boolean isInArea(Location patientLocation) {
         double euclideanDistance = this.getLocation().getDistance(patientLocation);
-        if (euclideanDistance > 100) {
+        if (euclideanDistance > (double) radius) {
             return false;
         }
         return true;

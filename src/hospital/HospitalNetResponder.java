@@ -36,9 +36,14 @@ public class HospitalNetResponder extends ContractNetResponder {
             injuryType = (InjuryType) cfp.getContentObject();
         } catch (UnreadableException e) {
             e.printStackTrace();
+            throw new NotUnderstoodException("Cound't get injury type");
         }
 
-        // We provide a proposal
+        int suitability = this.hospital.patientSuitability(injuryType);
+        if (suitability == 0)
+            throw new RefuseException("Currently full");
+
+        // We provide a proposal -> Add suitability
         Location location = hospital.getLocation();
         Integer levelOfCompetence = hospital.getLevelOfCompetenceForInjuryType(injuryType);
         HospitalProposal proposal = new HospitalProposal(location, levelOfCompetence);
