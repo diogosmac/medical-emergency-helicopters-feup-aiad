@@ -19,6 +19,7 @@ import java.util.Arrays;
 public class HelicopterAgent extends Agent {
 
     private Location location;
+    private int radius;
     private ArrayList<AID> responders = new ArrayList<>();
     private InjuryType patientInjuryType;
 
@@ -41,6 +42,7 @@ public class HelicopterAgent extends Agent {
         String[] args = Arrays.copyOf(objArgs, objArgs.length, String[].class);
 
         this.location = new Location(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+        this.radius = Integer.parseInt(args[2]);
 
         String logMessage = getLocalName() + ": " +
                 " waiting for CFP ...";
