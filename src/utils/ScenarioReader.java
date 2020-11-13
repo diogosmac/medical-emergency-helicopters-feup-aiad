@@ -38,12 +38,16 @@ public class ScenarioReader {
         JSONArray hospitals = (JSONArray) obj.get("hospitals");
         for (Object o : hospitals) {
             JSONObject hospital = (JSONObject) o;
-            String x, y;
+            String x, y, patients, capacity;
             x = hospital.get("x").toString();
             y = hospital.get("y").toString();
+            patients = hospital.get("patients").toString();
+            capacity = hospital.get("capacity").toString();
             List<String> argList = new ArrayList<>();
             argList.add(x);
             argList.add(y);
+            argList.add(patients);
+            argList.add(capacity);
             JSONArray specialties = (JSONArray) hospital.get("specialties");
             for (Object spec : specialties) {
                 JSONObject specialty = (JSONObject) spec;
@@ -67,11 +71,12 @@ public class ScenarioReader {
         JSONArray helicopters = (JSONArray) obj.get("helicopters");
         for (Object o : helicopters) {
             JSONObject helicopter = (JSONObject) o;
-            String x, y;
+            String x, y, radius;
             JSONObject location = (JSONObject) helicopter.get("location");
             x = location.get("x").toString();
             y = location.get("y").toString();
-            String[] args = {x, y};
+            radius = helicopter.get("radius").toString();
+            String[] args = {x, y, radius};
             AgentController hel = container.createNewAgent(
                     "helicopter" + helicopterID++,
                     HelicopterAgent.class.getName(),

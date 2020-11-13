@@ -3,6 +3,8 @@
     {
       "x": 20,
       "y": 30,
+      "patients": 120,
+      "capacity": 260,
       "specialties": [
         {
           "name": "HEART",
@@ -21,6 +23,8 @@
     {
       "x": 30,
       "y": 40,
+      "patients": 80,
+      "capacity": 240,
       "specialties": [
         {
           "name": "HEART",
@@ -43,6 +47,8 @@
     {
       "x": 70,
       "y": 10,
+      "patients": 180,
+      "capacity": 200,
       "specialties": [
         {
           "name": "HEART",
@@ -68,25 +74,29 @@
       "location":{
         "x": 30,
         "y": 20
-      }
+      },
+      "radius": 15
     },
     {
       "location":{
         "x": 40,
         "y": 10
-      }
+      },
+      "radius": 10
     },
     {
       "location":{
         "x": 50,
         "y": 40
-      }
+      },
+      "radius": 20
     },
     {
       "location":{
         "x": 0,
         "y": 10
-      }
+      },
+      "radius": 15
     }
   ],
   "patients": [
