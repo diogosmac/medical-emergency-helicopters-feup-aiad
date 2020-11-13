@@ -47,9 +47,8 @@ public class HelicopterAgent extends Agent {
         Logger.writeLog(logMessage, "Helicopter");
 
         if (!this.dfRegister()) {
-            //  log unsuccessful dfregister
             logMessage = getLocalName() + ": " +
-                    " unsuccessful dfregister!!";
+                    " unsuccessful DFRegister";
             Logger.writeLog(logMessage, "Helicopter");
         }
 
@@ -82,10 +81,12 @@ public class HelicopterAgent extends Agent {
         template.addServices(serviceDescription);
         try {
             DFAgentDescription[] result = DFService.search(this, template);
-            for(int i=0; i<result.length; ++i) {
-                System.out.println("Found " + result[i].getName());
+            for (DFAgentDescription dfAgentDescription : result) {
+                String logMessage = getLocalName() + ": " +
+                        "found [ " + dfAgentDescription.getName() + " ]";
+                Logger.writeLog(logMessage, "Helicopter");
                 // Add to list and/to initiate ContractNet to each one of them
-                responders.add(result[i].getName());
+                responders.add(dfAgentDescription.getName());
             }
         } catch(FIPAException fe) {
             fe.printStackTrace();

@@ -9,12 +9,13 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
 import utils.Location;
+import utils.Logger;
 
 import java.io.IOException;
 
 public class HelicopterNetResponder  extends ContractNetResponder {
 
-    private HelicopterAgent helicopter;
+    private final HelicopterAgent helicopter;
 
     public HelicopterNetResponder(HelicopterAgent helicopter, MessageTemplate mt) {
         super(helicopter, mt);
@@ -23,13 +24,17 @@ public class HelicopterNetResponder  extends ContractNetResponder {
 
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-        //TODO change logger accordingly
-        System.out.println("Agent " + helicopter.getLocalName() + ": CFP received from " + cfp.getSender().getName() + ". Action is " + cfp.getContent());
+        String logMessage = helicopter.getLocalName() + ": CFP received from [ " +
+                cfp.getSender().getName() + " ] , Action is [ " +
+                cfp.getContent() + " ]";
+        Logger.writeLog(logMessage, "Helicopter");
 
         // We provide a proposal
         Location proposal = helicopter.getLocation();
-        //TODO change logger accordingly
-        System.out.println("Agent " + helicopter.getLocalName() + ": Proposing " + proposal);
+
+        logMessage = helicopter.getLocalName() + ": proposing [ " + proposal + " ]";
+        Logger.writeLog(logMessage, "Helicopter");
+
         ACLMessage propose = cfp.createReply();
         propose.setPerformative(ACLMessage.PROPOSE);
 
@@ -44,9 +49,8 @@ public class HelicopterNetResponder  extends ContractNetResponder {
 
     @Override
     protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose,ACLMessage accept) throws FailureException {
-
-        //TODO change logger accordingly
-        System.out.println("Agent " + helicopter.getLocalName() + ": Proposal accepted");
+        String logMessage = helicopter.getLocalName() + ": Proposal accepted";
+        Logger.writeLog(logMessage, "Helicopter");
 
         //TODO decent try catch
         InjuryType injuryType = null;
@@ -57,21 +61,22 @@ public class HelicopterNetResponder  extends ContractNetResponder {
         }
 
         if (helicopter.performAction(injuryType)) {
-            //TODO change logger accordingly
-            System.out.println("Agent " + helicopter.getLocalName() + ": Action successfully performed");
+            logMessage = helicopter.getLocalName() + ": Action successfully performed";
+            Logger.writeLog(logMessage, "Helicopter");
+
             ACLMessage inform = accept.createReply();
             inform.setPerformative(ACLMessage.INFORM);
             return inform;
         }
         else {
-            //TODO change logger accordingly
-            System.out.println("Agent " + helicopter.getLocalName() + ": Action execution failed");
+            logMessage = helicopter.getLocalName() + ": Action execution failed";
+            Logger.writeLog(logMessage, "Helicopter");
             throw new FailureException("unexpected-error");
         }
     }
 
     protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
-        //TODO change logger accordingly
-        System.out.println("Agent " + helicopter.getLocalName() + ": Proposal rejected");
+        String logMessage = helicopter.getLocalName() + ": Proposal rejected";
+        Logger.writeLog(logMessage, "Helicopter");
     }
 }

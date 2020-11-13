@@ -8,6 +8,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import utils.AgentType;
 import utils.Location;
+import utils.Logger;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -43,7 +44,9 @@ public class HospitalAgent extends Agent {
         }
 
         if (!this.dfRegister()) {
-            //  log unsuccessful dfregister
+            String logMessage = getLocalName() + ": " +
+                    " unsuccessful DFRegister";
+            Logger.writeLog(logMessage, "Hospital");
         }
     }
 

@@ -4,8 +4,8 @@ import injury.Injury;
 
 public class HospitalProposal implements java.io.Serializable{
 
-    private Location location;
-    private Integer levelOfCompetence;
+    private final Location location;
+    private final Integer levelOfCompetence;
 
     public HospitalProposal(Location location, Integer levelOfCompetence){
         this.location = location;
