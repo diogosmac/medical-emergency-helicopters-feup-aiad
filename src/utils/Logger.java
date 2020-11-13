@@ -9,11 +9,13 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Logger {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
+    private static final SimpleDateFormat filenameDateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
+    private static final SimpleDateFormat logDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static final String fileExtension = ".aiad";
 
     public static boolean testOnly;         // will prevent logging in test-only runs
@@ -21,7 +23,12 @@ public class Logger {
     private static Path outputHelicopters;  // path to file where helicopter messages will be logged
     private static Path outputHospitals;    // path to file where hospital messages will be logged
     private static Path outputPatients;     // path to file where patient messages will be logged
-    
+
+    private static String nowString(SimpleDateFormat format) {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        return format.format(timestamp);
+    }
+
     private static String makeFileName(String directory, String category, String now) {
         return directory + now + "-" + category + fileExtension;
     }
@@ -32,9 +39,7 @@ public class Logger {
         if (testOnly)
             return;
 
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String now = dateFormat.format(timestamp);
-        
+        String now = nowString(filenameDateFormat);
         String logsDirectory = "logs/";     // exit utils package and exit src directory to get to project root
                                             // then create logs directory in project root
         String helicoptersFile = makeFileName(logsDirectory, "helicopters", now);
@@ -79,12 +84,14 @@ public class Logger {
                 return;
         }
 
+        message = nowString(logDateFormat) + " - " + message;
         try {
-            Files.write(path, Collections.singletonList(message), StandardCharsets.UTF_8,
+            Files.write(path, Arrays.asList(message), StandardCharsets.UTF_8,
                     Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
 }

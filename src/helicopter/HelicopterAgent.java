@@ -45,7 +45,7 @@ public class HelicopterAgent extends Agent {
         this.radius = Integer.parseInt(args[2]);
 
         String logMessage = getLocalName() + ": " +
-                " waiting for CFP ...";
+                "waiting for CFP ...";
         Logger.writeLog(logMessage, "Helicopter");
 
         if (!this.dfRegister()) {
@@ -85,7 +85,7 @@ public class HelicopterAgent extends Agent {
             DFAgentDescription[] result = DFService.search(this, template);
             for (DFAgentDescription dfAgentDescription : result) {
                 String logMessage = getLocalName() + ": " +
-                        "found [ " + dfAgentDescription.getName() + " ]";
+                        "found [ " + dfAgentDescription.getName().getLocalName() + " ]";
                 Logger.writeLog(logMessage, "Helicopter");
                 // Add to list and/to initiate ContractNet to each one of them
                 responders.add(dfAgentDescription.getName());
@@ -113,14 +113,16 @@ public class HelicopterAgent extends Agent {
 
         if (responders != null && responders.size() > 0) {
             int nResponders = responders.size();
-            String logMessage = getAID().getName() + ": " +
-                    " trying to delegate action [ treat-my-patient ]" +
+            String logMessage = getAID().getLocalName() + ": " +
+                    "trying to delegate action [ treat-my-patient ]" +
                     " to one of " + nResponders + " hospitals";
-            Logger.writeLog(logMessage, "Patient");
+            Logger.writeLog(logMessage, "Helicopter");
             addBehaviour(new HelicopterNetInitiator(this, nResponders, new ACLMessage(ACLMessage.CFP)));
         }
         else {
-            System.out.println("No responder specified.");
+            String logMessage = getLocalName() + ": " +
+                    "no responder specified";
+            Logger.writeLog(logMessage, "Helicopter");
         }
 
         return true;

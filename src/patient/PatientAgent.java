@@ -48,8 +48,8 @@ public class PatientAgent extends Agent {
         if (responders != null && responders.size() > 0) {
             int nResponders = responders.size();
 
-            String logMessage = getAID().getName() + ": " +
-                    " trying to delegate action [ pick-me-up ]" +
+            String logMessage = getAID().getLocalName() + ": " +
+                    "trying to delegate action [ pick-me-up ]" +
                     " to one of " + nResponders + " helicopters";
             Logger.writeLog(logMessage, "Patient");
 
@@ -57,7 +57,7 @@ public class PatientAgent extends Agent {
         }
         else {
             String logMessage = getLocalName() + ": " +
-                    " no responder specified";
+                    "no responder specified";
             Logger.writeLog(logMessage, "Patient");
         }
 
@@ -72,7 +72,7 @@ public class PatientAgent extends Agent {
             DFAgentDescription[] result = DFService.search(this, template);
             for (DFAgentDescription dfAgentDescription : result) {
                 String logMessage = getLocalName() + ": " +
-                        "found [ " + dfAgentDescription.getName() + " ]";
+                        "found [ " + dfAgentDescription.getName().getLocalName() + " ]";
                 Logger.writeLog(logMessage, "Patient");
                 // Add to list and/to initiate ContractNet to each one of them
                 responders.add(dfAgentDescription.getName());

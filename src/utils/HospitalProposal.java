@@ -17,4 +17,12 @@ public class HospitalProposal implements java.io.Serializable{
     public Integer getLevelOfCompetence() {
         return levelOfCompetence;
     }
+
+    @Override
+    public String toString() {
+        return "HospitalProposal { " +
+                "location=" + location.toString() +
+                ", levelOfCompetence=" + levelOfCompetence.toString() +
+                " }";
+    }
 }

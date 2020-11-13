@@ -27,8 +27,10 @@ public class PatientNetInitiator extends ContractNetInitiator {
         cfp.setContent("What is your location?");
         for (AID responder : patient.getResponders()) {
             cfp.addReceiver(responder);
-            String logMessage = patient.getLocalName() + ": sending CFP to [ " +
-                    responder.getLocalName() + " ]";
+
+            String logMessage = patient.getLocalName() + ": " +
+                    "sending CFP [ " + cfp.getContent() + " ] " +
+                    "to agent [ " + responder.getLocalName() + " ]";
             Logger.writeLog(logMessage, "Patient");
         }
         v.add(cfp);
@@ -37,14 +39,23 @@ public class PatientNetInitiator extends ContractNetInitiator {
     }
 
     protected void handlePropose(ACLMessage propose, Vector v) {
-        String logMessage = propose.getSender().getName() + ": " +
-                "sending proposal [ " + propose.getContent() + " ]";
+        String logMessage;
+        try {
+            logMessage = patient.getLocalName() + ": " +
+                    "received proposal [ " + propose.getContentObject() + " ] " +
+                    "from agent [ " + propose.getSender().getLocalName() + " ]";
+        } catch (UnreadableException e) {
+            logMessage = patient.getLocalName() + ": " +
+                    "received UNREADABLE proposal " +
+                    "from agent [ " + propose.getSender().getLocalName() + " ]";
+        }
         Logger.writeLog(logMessage, "Patient");
     }
 
     protected void handleRefuse(ACLMessage refuse) {
-        String logMessage = refuse.getSender().getName() + ": " +
-                "refused proposal";
+        String logMessage = patient.getLocalName() + ": " +
+                "received proposal refusal " +
+                "from agent [ " + refuse.getSender().getLocalName() + " ]";
         Logger.writeLog(logMessage, "Patient");
     }
 
@@ -52,12 +63,15 @@ public class PatientNetInitiator extends ContractNetInitiator {
         if (failure.getSender().equals(myAgent.getAMS())) {
             // FAILURE notification from the JADE runtime: the receiver
             // does not exist
-            String logMessage = failure.getSender().getName() + ": " +
-                    "responder does not exist";
+            String logMessage = patient.getLocalName() + ": " +
+                    "JADE runtime error [ " + failure.getSender().getLocalName() + " ] - " +
+                    "receiver does not exist";
             Logger.writeLog(logMessage, "Patient");
         }
         else {
-            String logMessage = failure.getSender().getName() + ": failed";
+            String logMessage = patient.getLocalName() + ": " +
+                    "received failure " +
+                    "from [ " + failure.getSender().getLocalName() + " ]";
             Logger.writeLog(logMessage, "Patient");
         }
         // Immediate failure --> we will not receive a response from this agent
@@ -105,7 +119,7 @@ public class PatientNetInitiator extends ContractNetInitiator {
         if (accept != null) {
             String logMessage = patient.getLocalName() + ": " +
                     "accepting proposal [ " + bestProposal +
-                    " ] from responder [ " + bestProposer.getName() + " ]";
+                    " ] from responder [ " + bestProposer.getLocalName() + " ]";
             Logger.writeLog(logMessage, "Patient");
 
             accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
@@ -119,8 +133,9 @@ public class PatientNetInitiator extends ContractNetInitiator {
     }
 
     protected void handleInform(ACLMessage inform) {
-        String logMessage = inform.getSender().getName() + ": " +
-                "successfully performed the requested action";
+        String logMessage = patient.getLocalName() + ": " +
+                "requested action successfully performed " +
+                "by [ " + inform.getSender().getLocalName() + " ]";
         Logger.writeLog(logMessage, "Patient");
     }
 }

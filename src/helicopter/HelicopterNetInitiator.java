@@ -31,11 +31,12 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
             e.printStackTrace();
         }
 
-        for (int i = 0; i < nResponders; i++) {
-            cfp.addReceiver(helicopter.getResponders().get(i));
+        for (AID responder : helicopter.getResponders()) {
+            cfp.addReceiver(responder);
 
-            String logMessage = helicopter.getLocalName() + ": sending CFP to [ " +
-                    helicopter.getResponders().get(i).getLocalName() + " ]";
+            String logMessage = helicopter.getLocalName() + ": " +
+                    "sending CFP [ " + helicopter.getPatientInjuryType() + " ] " +
+                    "to agent [ " + responder.getLocalName() + " ]";
             Logger.writeLog(logMessage, "Helicopter");
         }
         v.add(cfp);
@@ -44,14 +45,24 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
     }
 
     protected void handlePropose(ACLMessage propose, Vector v) {
-        String logMessage = propose.getSender().getName() + ": " +
-                "sending proposal [ " + propose.getContent() + " ]";
+        String logMessage;
+        try {
+            logMessage = helicopter.getLocalName() + ": " +
+                    "received proposal [ " + propose.getContentObject() + " ] " +
+                    "from agent [ " + propose.getSender().getLocalName() + " ]";
+        } catch (UnreadableException e) {
+            logMessage = helicopter.getLocalName() + ": " +
+                    "sending UNREADABLE proposal " +
+                    "from agent [ " + propose.getSender().getLocalName() + " ]";
+            e.printStackTrace();
+        }
         Logger.writeLog(logMessage, "Helicopter");
     }
 
     protected void handleRefuse(ACLMessage refuse) {
-        String logMessage = refuse.getSender().getName() + ": " +
-                "refused proposal";
+        String logMessage = helicopter.getLocalName() + ": " +
+                "received proposal refusal " +
+                "from agent [ " + refuse.getSender().getLocalName() + " ]";
         Logger.writeLog(logMessage, "Helicopter");
     }
 
@@ -59,12 +70,15 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
         if (failure.getSender().equals(myAgent.getAMS())) {
             // FAILURE notification from the JADE runtime: the receiver
             // does not exist
-            String logMessage = failure.getSender().getName() + ": " +
-                    "responder does not exist";
+            String logMessage = helicopter.getLocalName() + ": " +
+                    "JADE runtime error [ " + failure.getSender().getLocalName() + " ] - " +
+                    "receiver does not exist";
             Logger.writeLog(logMessage, "Helicopter");
         }
         else {
-            String logMessage = failure.getSender().getName() + ": failed";
+            String logMessage = helicopter.getLocalName() + ": " +
+                    "received failure " +
+                    "from [ " + failure.getSender().getLocalName() + " ]";
             Logger.writeLog(logMessage, "Helicopter");
         }
         // Immediate failure --> we will not receive a response from this agent
@@ -113,15 +127,16 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
         if (accept != null) {
             String logMessage = helicopter.getLocalName() + ": " +
                     "accepting proposal [ " + bestProposal +
-                    " ] from responder [ " + bestProposer.getName() + " ]";
+                    " ] from responder [ " + bestProposer.getLocalName() + " ]";
             Logger.writeLog(logMessage, "Helicopter");
             accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
         }
     }
 
     protected void handleInform(ACLMessage inform) {
-        String logMessage = inform.getSender().getName() + ": " +
-                "successfully performed the requested action";
+        String logMessage = helicopter.getLocalName() + ": " +
+                "requested action successfully performed " +
+                "by [ " + inform.getSender().getLocalName() + " ]";
         Logger.writeLog(logMessage, "Helicopter");
     }
 }
