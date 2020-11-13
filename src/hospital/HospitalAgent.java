@@ -87,11 +87,16 @@ public class HospitalAgent extends Agent {
 
     public int patientSuitability(InjuryType injuryType) {
         int suitability;
-        if (this.numberOfPatients < this.capacity) {
+        if (this.numberOfPatients >= this.capacity || !levelOfCompetence.containsKey(injuryType)) {
+            suitability = 0;
+        } else {
             // Calculate suitability estimation
-            suitability = 100;
-        } else suitability = 0;
+            double patientsOverCapacity = (double) numberOfPatients / (double) capacity;
+            double fineRatio = 0.75;
+            double factor = Math.min(1.0, fineRatio / patientsOverCapacity);
 
+            suitability = (int) (levelOfCompetence.get(injuryType) * factor);
+        }
         return suitability;
     }
 }
