@@ -16,8 +16,12 @@ public class Location implements java.io.Serializable {
         return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 
+    @Override
     public String toString() {
-        return "(" + x + ", " + y + ")";
+        return "Location { " +
+                "x=" + x +
+                ", y=" + y +
+                " }";
     }
 
 }

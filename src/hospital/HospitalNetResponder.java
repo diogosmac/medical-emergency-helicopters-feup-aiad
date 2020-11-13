@@ -25,9 +25,9 @@ public class HospitalNetResponder extends ContractNetResponder {
 
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-        String logMessage = hospital.getLocalName() + ": CFP received from [ " +
-                cfp.getSender().getName() + " ] , Action is [ " +
-                cfp.getContent() + " ]";
+        String logMessage = hospital.getLocalName() + ": " +
+                "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
+                "Action is [ " + cfp.getContent() + " ]";
         Logger.writeLog(logMessage, "Hospital");
 
         //TODO - decent try catch
@@ -60,11 +60,20 @@ public class HospitalNetResponder extends ContractNetResponder {
 
     @Override
     protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose,ACLMessage accept) throws FailureException {
-        String logMessage = hospital.getLocalName() + ": Proposal accepted";
+        String logMessage;
+        try {
+            logMessage = hospital.getLocalName() + ": " +
+                    "accepted proposal [ " + propose.getContentObject() + " ] " +
+                    "from agent [ " + propose.getSender().getLocalName() + " ]";
+        } catch (UnreadableException e) {
+            logMessage = hospital.getLocalName() + ": " +
+                    "accepted UNREADABLE proposal " +
+                    "from agent [ " + propose.getSender().getLocalName() + " ]";
+        }
         Logger.writeLog(logMessage, "Hospital");
 
         if (hospital.performAction()) {
-            logMessage = hospital.getLocalName() + ": Action successfully performed";
+            logMessage = hospital.getLocalName() + ": action successfully performed";
             Logger.writeLog(logMessage, "Hospital");
 
             ACLMessage inform = accept.createReply();
@@ -72,14 +81,16 @@ public class HospitalNetResponder extends ContractNetResponder {
             return inform;
         }
         else {
-            logMessage = hospital.getLocalName() + ": Action execution failed";
+            logMessage = hospital.getLocalName() + ": action execution failed";
             Logger.writeLog(logMessage, "Hospital");
             throw new FailureException("unexpected-error");
         }
     }
 
     protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
-        String logMessage = hospital.getLocalName() + ": Proposal rejected";
+        String logMessage = hospital.getLocalName() + ": " +
+                "proposal rejected " +
+                "by agent [ " + reject.getSender().getLocalName() + " ]";
         Logger.writeLog(logMessage, "Hospital");
     }
 }
