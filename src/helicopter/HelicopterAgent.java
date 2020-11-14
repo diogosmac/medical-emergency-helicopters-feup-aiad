@@ -128,6 +128,14 @@ public class HelicopterAgent extends Agent {
         return true;
     }
 
+    public boolean isInArea(Location patientLocation) {
+        double euclideanDistance = this.getLocation().getDistance(patientLocation);
+        if (euclideanDistance > (double) radius) {
+            return false;
+        }
+        return true;
+    }
+
     //TODO decent utility function
     protected int hospitalEvaluation(double distance, Integer levelOfCompetence){
         return 1;

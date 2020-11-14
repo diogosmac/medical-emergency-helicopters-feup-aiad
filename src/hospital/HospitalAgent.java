@@ -16,7 +16,7 @@ import java.util.EnumMap;
 public class HospitalAgent extends Agent {
 
     private Location location;
-    private int patients;
+    private int numberOfPatients;
     private int capacity;
     private EnumMap<InjuryType, Integer> levelOfCompetence;
 
@@ -34,7 +34,7 @@ public class HospitalAgent extends Agent {
         String[] args = Arrays.copyOf(objArgs, objArgs.length, String[].class);
 
         this.location = new Location(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-        this.patients = Integer.parseInt(args[2]);
+        this.numberOfPatients = Integer.parseInt(args[2]);
         this.capacity = Integer.parseInt(args[3]);
         this.levelOfCompetence = new EnumMap<>(InjuryType.class);
         for (InjuryType type : InjuryType.values()) {
@@ -83,5 +83,20 @@ public class HospitalAgent extends Agent {
     protected boolean performAction() {
         //TODO  - do something here
         return true;
+    }
+
+    public int patientSuitability(InjuryType injuryType) { // Lower is better
+        int suitability;
+        if (this.numberOfPatients >= this.capacity || !levelOfCompetence.containsKey(injuryType)) {
+            suitability = 100;
+        } else {
+            // Calculate suitability estimation
+            double patientsOverCapacity = (double) numberOfPatients / (double) capacity;
+            double fineRatio = 0.75;
+            double factor = Math.min(1.0, fineRatio / patientsOverCapacity);
+
+            suitability = (int) (levelOfCompetence.get(injuryType) * factor);
+        }
+        return 100 - suitability;
     }
 }

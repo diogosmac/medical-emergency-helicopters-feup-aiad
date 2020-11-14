@@ -10,7 +10,6 @@ import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
 import utils.Location;
 import utils.Logger;
-
 import java.io.IOException;
 
 public class HelicopterNetResponder  extends ContractNetResponder {
@@ -24,10 +23,28 @@ public class HelicopterNetResponder  extends ContractNetResponder {
 
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-        String logMessage = helicopter.getLocalName() + ": " +
-                "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
-                "Action is [ " +  cfp.getContent() + " ]";
+        String logMessage;
+        try {
+            logMessage = helicopter.getLocalName() + ": " +
+                    "CFP received from [ " + cfp.getSender().getName() + " ] , " +
+                    "Action is [ " + cfp.getContentObject() + " ]";
+        } catch (UnreadableException e) {
+            logMessage = helicopter.getLocalName() + ": " +
+                    "CFP received from [ " + cfp.getSender().getName() + " ] , " +
+                    "UNREADABLE Action";
+        }
         Logger.writeLog(logMessage, "Helicopter");
+        Location patientLocation;
+        try {
+             patientLocation = (Location) cfp.getContentObject();
+        } catch (UnreadableException e) {
+            e.printStackTrace();
+            throw new NotUnderstoodException("Could't understand location!");
+        }
+
+        if (!this.helicopter.isInArea(patientLocation)) { // Switch this
+            throw new RefuseException("Out of my area!");
+        }
 
         // We provide a proposal
         Location proposal = helicopter.getLocation();

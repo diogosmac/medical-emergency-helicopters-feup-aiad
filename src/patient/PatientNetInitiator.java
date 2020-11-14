@@ -24,7 +24,11 @@ public class PatientNetInitiator extends ContractNetInitiator {
 
     protected Vector prepareCfps(ACLMessage cfp) {
         Vector v = new Vector();
-        cfp.setContent("What is your location?");
+        try {
+            cfp.setContentObject(this.patient.getPosition());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         for (AID responder : patient.getResponders()) {
             cfp.addReceiver(responder);
 
