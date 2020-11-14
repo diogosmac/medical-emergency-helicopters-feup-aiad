@@ -3,26 +3,26 @@ package utils;
 public class HospitalProposal implements java.io.Serializable {
 
     private final Location location;
-    private final Integer levelOfCompetence;
+    private final Integer suitability;
 
-    public HospitalProposal(Location location, Integer levelOfCompetence){
+    public HospitalProposal(Location location, Integer suitability){
         this.location = location;
-        this.levelOfCompetence = levelOfCompetence;
+        this.suitability = suitability;
     }
 
     public Location getLocation() {
         return location;
     }
 
-    public Integer getLevelOfCompetence() {
-        return levelOfCompetence;
+    public Integer getSuitability() {
+        return suitability;
     }
 
     @Override
     public String toString() {
         return "HospitalProposal { " +
                 "location=" + location.toString() +
-                ", levelOfCompetence=" + levelOfCompetence.toString() +
+                ", suitability=" + suitability.toString() +
                 " }";
     }
 }
