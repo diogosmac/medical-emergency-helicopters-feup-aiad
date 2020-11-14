@@ -111,8 +111,8 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
                 try {
                     proposal = (HospitalProposal) (msg.getContentObject());
                     double distance = proposal.getLocation().getDistance(helicopter.getLocation());
-                    Integer levelOfCompetence = proposal.getLevelOfCompetence();
-                    int hospitalValue = helicopter.hospitalEvaluation(distance, levelOfCompetence);
+                    Integer suitability = proposal.getSuitability();
+                    int hospitalValue = helicopter.hospitalEvaluation(distance, suitability);
                     if (hospitalValue < bestProposal) {
                         bestProposal = hospitalValue;
                         bestProposer = msg.getSender();

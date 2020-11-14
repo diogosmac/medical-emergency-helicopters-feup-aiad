@@ -45,8 +45,7 @@ public class HospitalNetResponder extends ContractNetResponder {
 
         // We provide a proposal -> Add suitability
         Location location = hospital.getLocation();
-        Integer levelOfCompetence = hospital.getLevelOfCompetenceForInjuryType(injuryType);
-        HospitalProposal proposal = new HospitalProposal(location, levelOfCompetence);
+        HospitalProposal proposal = new HospitalProposal(location, suitability);
 
         logMessage = hospital.getLocalName() + ": proposing [ " + proposal + " ]";
         Logger.writeLog(logMessage, "Hospital");
