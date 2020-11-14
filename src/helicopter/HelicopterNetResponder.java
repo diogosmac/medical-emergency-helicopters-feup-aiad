@@ -1,6 +1,6 @@
 package helicopter;
 
-import injury.InjuryType;
+import injury.Injury;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -79,14 +79,14 @@ public class HelicopterNetResponder  extends ContractNetResponder {
         Logger.writeLog(logMessage, "Helicopter");
 
         //TODO decent try catch
-        InjuryType injuryType = null;
+        Injury injury = null;
         try {
-            injuryType = (InjuryType) accept.getContentObject();
+            injury = (Injury) accept.getContentObject();
         } catch (UnreadableException e) {
             e.printStackTrace();
         }
 
-        if (helicopter.performAction(injuryType)) {
+        if (helicopter.performAction(injury)) {
             logMessage = helicopter.getLocalName() + ": action successfully performed";
             Logger.writeLog(logMessage, "Helicopter");
 

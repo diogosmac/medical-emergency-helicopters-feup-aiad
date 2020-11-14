@@ -1,6 +1,6 @@
 package injury;
 
-public class Injury {
+public class Injury implements java.io.Serializable {
 
     private final InjuryType type;
     private final int severity;
@@ -18,8 +18,11 @@ public class Injury {
         return severity;
     }
 
+    @Override
     public String toString() {
-        return type.toString() + " - " + severity;
+        return "Injury { " +
+                "type=" + type +
+                ", severity=" + severity +
+                " }";
     }
-
 }

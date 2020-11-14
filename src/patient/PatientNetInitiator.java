@@ -129,7 +129,7 @@ public class PatientNetInitiator extends ContractNetInitiator {
             accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
             //TODO - decent try catch
             try {
-                accept.setContentObject(patient.getInjuryType());
+                accept.setContentObject(patient.getInjury());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }

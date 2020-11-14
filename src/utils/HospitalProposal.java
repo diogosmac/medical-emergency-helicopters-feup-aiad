@@ -1,6 +1,6 @@
 package utils;
 
-public class HospitalProposal implements java.io.Serializable{
+public class HospitalProposal implements java.io.Serializable {
 
     private final Location location;
     private final Integer levelOfCompetence;

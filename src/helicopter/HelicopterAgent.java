@@ -13,6 +13,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import utils.Logger;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -21,7 +22,7 @@ public class HelicopterAgent extends Agent {
     private Location location;
     private int radius;
     private ArrayList<AID> responders = new ArrayList<>();
-    private InjuryType patientInjuryType;
+    private Injury patientInjury;
 
     public Location getLocation() {
         return location;
@@ -31,9 +32,8 @@ public class HelicopterAgent extends Agent {
         return responders;
     }
 
-    //TODO get corrent patientInjuryType
-    public InjuryType getPatientInjuryType(){
-        return patientInjuryType;
+    public InjuryType getPatientInjuryType() {
+        return patientInjury.getType();
     }
 
     public void setup() {
@@ -106,8 +106,8 @@ public class HelicopterAgent extends Agent {
         // Log end of service
     }
 
-    protected boolean performAction(InjuryType injuryType) {
-        patientInjuryType = injuryType;
+    protected boolean performAction(Injury injury) {
+        patientInjury = injury;
 
         this.dfSearch();
 
@@ -130,15 +130,15 @@ public class HelicopterAgent extends Agent {
 
     public boolean isInArea(Location patientLocation) {
         double euclideanDistance = this.getLocation().getDistance(patientLocation);
-        if (euclideanDistance > (double) radius) {
-            return false;
-        }
-        return true;
+        return (euclideanDistance <= (double) radius);
     }
 
-    //TODO decent utility function
     protected int hospitalEvaluation(double distance, Integer levelOfCompetence){
-        return 1;
+        int distanceWeight = patientInjury.getSeverity();
+        int competenceWeight = 100 - distanceWeight;
+
+        double eval = distanceWeight * distance + competenceWeight * levelOfCompetence.doubleValue();
+        return (int) Math.ceil(eval / 100);
     }
 
 }

@@ -10,7 +10,6 @@ import java.nio.file.StandardOpenOption;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class Logger {
 

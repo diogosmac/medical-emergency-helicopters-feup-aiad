@@ -1,6 +1,6 @@
 package injury;
 
-public enum InjuryType implements java.io.Serializable{
+public enum InjuryType implements java.io.Serializable {
     CARDIOLOGY,
     LEG,
     BONE,

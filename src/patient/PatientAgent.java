@@ -1,7 +1,6 @@
 package patient;
 
 import injury.Injury;
-import injury.InjuryType;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -22,9 +21,7 @@ public class PatientAgent extends Agent {
     private Location position;
     private ArrayList<AID> responders = new ArrayList<>();
 
-    public InjuryType getInjuryType() {
-        return injury.getType();
-    }
+    public Injury getInjury() { return injury; }
 
     public ArrayList<AID> getResponders(){
         return responders;
