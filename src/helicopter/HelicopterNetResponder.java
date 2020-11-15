@@ -13,7 +13,7 @@ import injury.Injury;
 
 import java.io.IOException;
 
-public class HelicopterNetResponder  extends ContractNetResponder {
+public class HelicopterNetResponder extends ContractNetResponder {
 
     private final HelicopterAgent helicopter;
 
@@ -27,6 +27,7 @@ public class HelicopterNetResponder  extends ContractNetResponder {
         Location patientLocation;
         try {
             patientLocation = (Location) cfp.getContentObject();
+            helicopter.setPatientLocation(patientLocation);
         } catch (UnreadableException e) {
             String logMessage = helicopter.getLocalName() + ": " +
                     "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +

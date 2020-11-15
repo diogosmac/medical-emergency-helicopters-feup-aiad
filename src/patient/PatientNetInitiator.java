@@ -68,8 +68,9 @@ public class PatientNetInitiator extends ContractNetInitiator {
 
     protected void handleRefuse(ACLMessage refuse) {
         String logMessage = patient.getLocalName() + ": " +
-                "received proposal refusal " +
-                "from agent [ " + refuse.getSender().getLocalName() + " ]";
+                "proposal was refused " +
+                "by agent [ " + refuse.getSender().getLocalName() + " ] , " +
+                "for reason [ " + refuse.getContent() + " ]";
         Logger.writeLog(logMessage, Logger.PATIENT);
     }
 
@@ -134,7 +135,7 @@ public class PatientNetInitiator extends ContractNetInitiator {
         // Accept the proposal of the best proposer
         if (accept != null) {
             String logMessage = patient.getLocalName() + ": " +
-                    "accepting proposal [ " + bestProposal + " ] " +
+                    "accepting proposal with utility [ " + bestProposal + " ] " +
                     "from responder [ " + bestProposer.getLocalName() + " ]";
             Logger.writeLog(logMessage, Logger.PATIENT);
 

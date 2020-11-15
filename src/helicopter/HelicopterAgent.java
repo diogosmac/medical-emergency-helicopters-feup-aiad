@@ -22,7 +22,9 @@ public class HelicopterAgent extends Agent {
     private int radius;
     private ArrayList<AID> responders = new ArrayList<>();
     private Injury patientInjury;
+    private Location patientLocation;
     private boolean busy;
+    private double speed = 1;
 
     public Location getLocation() {
         return location;
@@ -36,12 +38,20 @@ public class HelicopterAgent extends Agent {
         return patientInjury.getType();
     }
 
+    public void setPatientLocation(Location patientLocation) {
+        this.patientLocation = patientLocation;
+    }
+
     public boolean isBusy() {
         return busy;
     }
 
     public void setBusy(boolean busy) {
         this.busy = busy;
+    }
+
+    public double getSpeed() {
+        return speed;
     }
 
     public void setup() {
@@ -51,6 +61,10 @@ public class HelicopterAgent extends Agent {
 
         this.location = new Location(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
         this.radius = Integer.parseInt(args[2]);
+
+        if (args.length > 3) {
+            this.speed = Double.parseDouble(args[3]);
+        }
 
         String logMessage = getLocalName() + ": " +
                 "waiting for CFP ...";
@@ -85,6 +99,7 @@ public class HelicopterAgent extends Agent {
 
     // Add a subscription?? (be notified when there's a new hospital)
     private boolean dfSearch() {
+        responders = new ArrayList<>();
         DFAgentDescription template = new DFAgentDescription();
         ServiceDescription serviceDescription = new ServiceDescription();
         serviceDescription.setType(AgentType.HOSPITAL);
@@ -102,7 +117,7 @@ public class HelicopterAgent extends Agent {
             fe.printStackTrace();
         }
 
-        return true;
+        return responders != null && responders.size() > 0;
     }
 
     protected void takeDown() {
@@ -125,15 +140,13 @@ public class HelicopterAgent extends Agent {
         this.patientInjury = injury;
         this.busy = true;
 
-        this.dfSearch();
-
-        if (responders != null && responders.size() > 0) {
+        if (this.dfSearch()) {
             int nResponders = responders.size();
             String logMessage = getAID().getLocalName() + ": " +
                     "trying to delegate action [ treat-my-patient ]" +
                     " to one of " + nResponders + " hospitals";
             Logger.writeLog(logMessage, Logger.HELICOPTER);
-            addBehaviour(new HelicopterNetInitiator(this, nResponders, new ACLMessage(ACLMessage.CFP)));
+            addBehaviour(new HelicopterNetInitiator(this, nResponders, patientLocation, new ACLMessage(ACLMessage.CFP)));
         }
         else {
             String logMessage = getLocalName() + ": " +

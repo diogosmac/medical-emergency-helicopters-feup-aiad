@@ -1,8 +1,8 @@
 package injury;
 
 public enum InjuryType implements java.io.Serializable {
-    CARDIOLOGY,
-    LEG,
+    FLU,
+    LUNGS,
     BONE,
     HEART,
     BRAIN,

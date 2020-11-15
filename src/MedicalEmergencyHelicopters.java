@@ -6,7 +6,7 @@ import jade.wrapper.StaleProxyException;
 import utils.Logger;
 import utils.ScenarioReader;
 
-public class Jade {
+public class MedicalEmergencyHelicopters {
 
     public static void main(String[] args) {
 
@@ -14,7 +14,7 @@ public class Jade {
             System.out.println(
                     "Usage: java MedicalEmergencyHelicopters -gui -name <name> <json-file> [ <test> ]\n" +
                     "       name:       name of the program\n" +
-                    "       json-file:  path to file (from test_files directory) containing helicopters, hospitals and patients\n" +
+                    "       json-file:  name of file (from test_files directory) containing helicopters, hospitals and patients\n" +
                     "       test:       FALSE (default) if logger should document execution, TRUE if testing only"
             );
             System.exit(1);
@@ -27,7 +27,7 @@ public class Jade {
         profile.setParameter(Profile.GUI, "true");
 
         AgentContainer mainContainer = runt.createMainContainer(profile);
-        String filename = "test_files/" + args[3];
+        String filename = "test_files/" + args[3] + ".json";
 
         try {
             ScenarioReader.readScenario(mainContainer, filename);

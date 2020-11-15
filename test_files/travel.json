@@ -1,0 +1,113 @@
+{
+  "hospitals": [
+    {
+      "x": 20,
+      "y": 5,
+      "patients": 1,
+      "capacity": 5,
+      "specialties": [
+        {
+          "name": "BRAIN",
+          "competence": 10
+        },
+        {
+          "name": "BONE",
+          "competence": 70
+        }
+      ]
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "patients": 1,
+      "capacity": 5,
+      "specialties": [
+        {
+          "name": "HEART",
+          "competence": 80
+        },
+        {
+          "name": "BRAIN",
+          "competence": 90
+        }
+      ]
+    },
+    {
+      "x": 100,
+      "y": 20,
+      "patients": 1,
+      "capacity": 5,
+      "specialties": [
+        {
+          "name": "BURN",
+          "competence": 80
+        },
+        {
+          "name": "LUNGS",
+          "competence": 90
+        }
+      ]
+    }
+  ],
+  "helicopters": [
+    {
+      "location":{
+        "x": 8,
+        "y": 19
+      },
+      "radius": 15,
+      "speed": 1.50
+    },
+    {
+      "location":{
+        "x": 10,
+        "y": 5
+      },
+      "radius": 15,
+      "speed": 1.50
+    },
+    {
+      "location":{
+        "x": 8,
+        "y": 5
+      },
+      "radius": 37,
+      "speed": 2.50
+    }
+  ],
+  "patients": [
+    {
+      "location": {
+        "x": 5,
+        "y": 20
+      },
+      "injury":{
+        "type": "BONE",
+        "severity": "20"
+      },
+      "wait": 0
+    },
+    {
+      "location": {
+        "x": 5,
+        "y": 18
+      },
+      "injury":{
+        "type": "BONE",
+        "severity": "30"
+      },
+      "wait": 5
+    },
+    {
+      "location": {
+        "x": 15,
+        "y": 5
+      },
+      "injury":{
+        "type": "BURN",
+        "severity": "20"
+      },
+      "wait": 0
+    }
+  ]
+}

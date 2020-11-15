@@ -75,21 +75,24 @@
         "x": 30,
         "y": 20
       },
-      "radius": 15
+      "radius": 15,
+      "speed": 1.50
     },
     {
       "location":{
         "x": 40,
         "y": 10
       },
-      "radius": 10
+      "radius": 10,
+      "speed": 0.75
     },
     {
       "location":{
         "x": 50,
         "y": 40
       },
-      "radius": 20
+      "radius": 20,
+      "speed": 1.2
     },
     {
       "location":{
@@ -108,7 +111,8 @@
       "injury":{
         "type": "BONE",
         "severity": "20"
-      }
+      },
+      "wait": 20
     },
     {
       "location":{

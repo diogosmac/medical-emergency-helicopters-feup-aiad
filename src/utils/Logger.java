@@ -14,11 +14,11 @@ import java.util.Arrays;
 public class Logger {
 
     public static final String HELICOPTER = "Helicopter";
-    public static final String HOSPITAL = "Hospital";
-    public static final String PATIENT = "Patient";
+    public static final String HOSPITAL = "Hospital  ";
+    public static final String PATIENT = "Patient   ";
 
     private static final SimpleDateFormat filenameDateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
-    private static final SimpleDateFormat logDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private static final SimpleDateFormat logDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
     private static final String fileExtension = ".aiad";
 
     public static boolean testOnly;         // will prevent logging in test-only runs
@@ -65,9 +65,10 @@ public class Logger {
     }
 
     public static void writeLog(String message, String logSource) {
+        message = nowString(logDateFormat) + " - " + message;
 
         if (testOnly) {
-            System.out.println(logSource + " log - " + message);
+            System.out.println(logSource + " - " + message);
             return;
         }
 
@@ -87,7 +88,6 @@ public class Logger {
                 return;
         }
 
-        message = nowString(logDateFormat) + " - " + message;
         try {
             Files.write(path, Arrays.asList(message), StandardCharsets.UTF_8,
                     Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);

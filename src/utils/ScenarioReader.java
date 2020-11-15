@@ -76,7 +76,11 @@ public class ScenarioReader {
             x = location.get("x").toString();
             y = location.get("y").toString();
             radius = helicopter.get("radius").toString();
-            String[] args = {x, y, radius};
+            String[] args;
+            if (helicopter.containsKey("speed")) {
+                String speed = helicopter.get("speed").toString();
+                args = new String[]{ x, y, radius, speed };
+            } else args = new String[]{ x, y, radius };
             AgentController hel = container.createNewAgent(
                     "helicopter" + helicopterID++,
                     HelicopterAgent.class.getName(),
@@ -90,14 +94,18 @@ public class ScenarioReader {
         JSONArray patients = (JSONArray) obj.get("patients");
         for (Object o : patients) {
             JSONObject patient = (JSONObject) o;
-            String x, y, injuryType, injurySeverity;
+            String x, y, injuryType, injurySeverity, waitPeriod;
             JSONObject location = (JSONObject) patient.get("location");
             x = location.get("x").toString();
             y = location.get("y").toString();
             JSONObject injury = (JSONObject) patient.get("injury");
             injuryType = injury.get("type").toString();
             injurySeverity = injury.get("severity").toString();
-            String[] args = {x, y, injuryType, injurySeverity};
+            String[] args;
+            if (patient.containsKey("wait")) {
+                waitPeriod = patient.get("wait").toString();
+                args = new String[]{x, y, injuryType, injurySeverity, waitPeriod};
+            } else args = new String[]{x, y, injuryType, injurySeverity};
             AgentController pat = container.createNewAgent(
                     "patient" + patientID++,
                     PatientAgent.class.getName(),
