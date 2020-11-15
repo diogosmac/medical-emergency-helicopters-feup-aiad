@@ -1,6 +1,7 @@
 package hospital;
 
 import jade.core.Agent;
+import jade.core.Timer;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -26,6 +27,10 @@ public class HospitalAgent extends Agent {
         return location;
     }
 
+    public boolean isFull() {
+        return this.numberOfPatients == this.capacity;
+    }
+
     public Integer getLevelOfCompetenceForInjuryType(InjuryType injuryType){
         if (!levelOfCompetence.containsKey(injuryType))
             return 0;
@@ -42,7 +47,7 @@ public class HospitalAgent extends Agent {
         this.capacity = Integer.parseInt(args[3]);
         this.levelOfCompetence = new EnumMap<>(InjuryType.class);
         for (InjuryType type : InjuryType.values()) {
-            this.levelOfCompetence.put(type, 50);
+            this.levelOfCompetence.put(type, 0);
         }
         for (int i = 4; i + 1 < args.length; i += 2) {
             String arg = args[i];

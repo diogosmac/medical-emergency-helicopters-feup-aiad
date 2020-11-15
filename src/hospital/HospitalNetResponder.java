@@ -42,8 +42,11 @@ public class HospitalNetResponder extends ContractNetResponder {
         Logger.writeLog(logMessage, Logger.HOSPITAL);
 
         int suitability = this.hospital.patientSuitability(injuryType);
-        if (suitability == 0)
+        if (this.hospital.isFull())
             throw new RefuseException("Currently full");
+        else if (suitability == 100) {
+            throw new RefuseException("Unavailable Specialty");
+        }
 
         // We provide a proposal -> Add suitability
         Location location = hospital.getLocation();

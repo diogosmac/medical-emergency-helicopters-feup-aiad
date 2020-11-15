@@ -1,5 +1,6 @@
 package helicopter;
 
+import hospital.HospitalAgent;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
@@ -130,6 +131,7 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
                         bestProposal = hospitalValue;
                         bestProposer = msg.getSender();
                         accept = reply;
+                        this.hospitalLocation = proposal.getLocation();
                     }
                 } catch (UnreadableException unreadableException) {
                     String logMessage = helicopter.getLocalName() + ": " +
@@ -161,7 +163,7 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
         double distanceToHospital = patientLocation.getDistance(hospitalLocation);
         double distanceToReturn = hospitalLocation.getDistance(helicopter.getLocation());
         double totalDistance = distanceToPatient + distanceToHospital + distanceToReturn;
-        double travelTime = totalDistance / helicopter.getSpeed();
+        double travelTime = Math.round(totalDistance / helicopter.getSpeed() * 100) / 100;
         logMessage = helicopter.getLocalName() + ": " +
                 "starting voyage, " +
                 "at our speed of [ " + helicopter.getSpeed() + " ] , " +

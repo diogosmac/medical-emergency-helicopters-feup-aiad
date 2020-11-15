@@ -135,7 +135,7 @@ public class PatientNetInitiator extends ContractNetInitiator {
         // Accept the proposal of the best proposer
         if (accept != null) {
             String logMessage = patient.getLocalName() + ": " +
-                    "accepting proposal [ " + bestProposal + " ] " +
+                    "accepting proposal with utility [ " + bestProposal + " ] " +
                     "from responder [ " + bestProposer.getLocalName() + " ]";
             Logger.writeLog(logMessage, Logger.PATIENT);
 
