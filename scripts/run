@@ -5,11 +5,11 @@ cp="build;jade/lib/jade.jar;lib/json-simple-1.1.1.jar;lib/junit-4.10.jar;lib/ham
 
 if [ $# -eq 1 ]
     then
-        java -classpath $cp MedicalEmergencyHelicopters -gui -name medical-emergency-helicopters "$1" false
+        java -classpath $cp MedicalEmergencyHelicopters "$1" false
         exit 0
 elif [ $# -eq 2 ]
     then
-        java -classpath $cp MedicalEmergencyHelicopters -gui -name medical-emergency-helicopters "$1" "$2"
+        java -classpath $cp MedicalEmergencyHelicopters "$1" "$2"
         exit 0
 else
     echo "Usage:  $0 <json-file> [ <test> ]"

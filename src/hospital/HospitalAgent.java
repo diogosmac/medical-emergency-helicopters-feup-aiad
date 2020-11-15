@@ -46,9 +46,6 @@ public class HospitalAgent extends Agent {
         this.numberOfPatients = Integer.parseInt(args[2]);
         this.capacity = Integer.parseInt(args[3]);
         this.levelOfCompetence = new EnumMap<>(InjuryType.class);
-        for (InjuryType type : InjuryType.values()) {
-            this.levelOfCompetence.put(type, 0);
-        }
         for (int i = 4; i + 1 < args.length; i += 2) {
             String arg = args[i];
             InjuryType type = InjuryType.valueOf(arg);

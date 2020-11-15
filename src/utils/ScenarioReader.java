@@ -1,5 +1,8 @@
 package utils;
 
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+import jade.core.Runtime;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
@@ -20,7 +23,8 @@ public class ScenarioReader {
     private static int helicopterID = 1;
     private static int patientID = 1;
 
-    public static void readScenario(AgentContainer container, String filename) throws StaleProxyException {
+    public static void readScenario(AgentContainer hospitalContainer, AgentContainer helicopterContainer,
+                                    AgentContainer patientContainer, String filename) throws StaleProxyException {
         JSONParser parser = new JSONParser();
         JSONObject obj;
         try {
@@ -29,9 +33,11 @@ public class ScenarioReader {
             e.printStackTrace();
             return;
         }
-        readHospitals(container, obj);
-        readHelicopters(container, obj);
-        readPatients(container, obj);
+        readHospitals(hospitalContainer, obj);
+
+        readHelicopters(helicopterContainer, obj);
+
+        readPatients(patientContainer, obj);
     }
 
     private static void readHospitals(AgentContainer container, JSONObject obj) throws StaleProxyException {
