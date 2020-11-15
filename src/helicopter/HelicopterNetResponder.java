@@ -26,12 +26,12 @@ public class HelicopterNetResponder  extends ContractNetResponder {
         String logMessage;
         try {
             logMessage = helicopter.getLocalName() + ": " +
-                    "CFP received from [ " + cfp.getSender().getName() + " ] , " +
-                    "Action is [ " + cfp.getContentObject() + " ]";
+                    "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
+                    "Location is [ " + cfp.getContentObject() + " ]";
         } catch (UnreadableException e) {
             logMessage = helicopter.getLocalName() + ": " +
-                    "CFP received from [ " + cfp.getSender().getName() + " ] , " +
-                    "UNREADABLE Action";
+                    "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
+                    "UNREADABLE Location";
         }
         Logger.writeLog(logMessage, "Helicopter");
         Location patientLocation;
@@ -39,7 +39,7 @@ public class HelicopterNetResponder  extends ContractNetResponder {
              patientLocation = (Location) cfp.getContentObject();
         } catch (UnreadableException e) {
             e.printStackTrace();
-            throw new NotUnderstoodException("Could't understand location!");
+            throw new NotUnderstoodException("Couldn't understand location!");
         }
 
         if (!this.helicopter.isInArea(patientLocation)) { // Switch this

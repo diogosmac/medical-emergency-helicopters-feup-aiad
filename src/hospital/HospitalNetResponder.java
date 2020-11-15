@@ -25,9 +25,16 @@ public class HospitalNetResponder extends ContractNetResponder {
 
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-        String logMessage = hospital.getLocalName() + ": " +
-                "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
-                "Action is [ " + cfp.getContent() + " ]";
+        String logMessage;
+        try {
+            logMessage = hospital.getLocalName() + ": " +
+                    "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
+                    "Injury Type is [ " + cfp.getContentObject() + " ]";
+        } catch (UnreadableException e) {
+            logMessage = hospital.getLocalName() + ": " +
+                    "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
+                    "UNREADABLE Injury Type";
+        }
         Logger.writeLog(logMessage, "Hospital");
 
         //TODO - decent try catch

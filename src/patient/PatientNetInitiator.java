@@ -32,9 +32,16 @@ public class PatientNetInitiator extends ContractNetInitiator {
         for (AID responder : patient.getResponders()) {
             cfp.addReceiver(responder);
 
-            String logMessage = patient.getLocalName() + ": " +
-                    "sending CFP [ " + cfp.getContent() + " ] " +
-                    "to agent [ " + responder.getLocalName() + " ]";
+            String logMessage;
+            try {
+                logMessage = patient.getLocalName() + ": " +
+                        "sending CFP [ " + cfp.getContentObject() + " ] " +
+                        "to agent [ " + responder.getLocalName() + " ]";
+            } catch (UnreadableException e) {
+                logMessage = patient.getLocalName() + ": " +
+                        "sending UNREADABLE CFP" +
+                        "to agent [ " + responder.getLocalName() + " ]";
+            }
             Logger.writeLog(logMessage, "Patient");
         }
         v.add(cfp);
