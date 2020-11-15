@@ -19,7 +19,7 @@ public class PatientAgent extends Agent {
 
     private Injury injury;
     private Location position;
-    private int waitPeriod;
+    private int waitPeriod = 0;
     private ArrayList<AID> responders = new ArrayList<>();
     private int numberOfResponders;
 
@@ -50,9 +50,7 @@ public class PatientAgent extends Agent {
             this.waitPeriod = Integer.parseInt(args[4]);
         }
 
-        this.dfSearch();
-
-        if (responders != null && responders.size() > 0) {
+        if (this.dfSearch()) {
             numberOfResponders = responders.size();
 
             String logMessage = getAID().getLocalName() + ": " +
@@ -64,8 +62,10 @@ public class PatientAgent extends Agent {
                 addBehaviour(new PatientNetInitiator(this, numberOfResponders, new ACLMessage(ACLMessage.CFP)));
             }
             else {
-                System.out.println("Should wait");
-                addBehaviour(new WaitBehaviour(this, this.waitPeriod * 1000));
+                logMessage = getLocalName() + ": " +
+                        "waiting [ " + waitPeriod + " ] seconds before sending out request";
+                Logger.writeLog(logMessage, "Patient");
+                addBehaviour(new PatientWaitBehaviour(this, this.waitPeriod * 1000));
             }
         }
         else {
@@ -77,6 +77,7 @@ public class PatientAgent extends Agent {
     }
 
     private boolean dfSearch() {
+        responders = new ArrayList<>();
         DFAgentDescription template = new DFAgentDescription();
         ServiceDescription serviceDescription = new ServiceDescription();
         serviceDescription.setType(AgentType.HELICOPTER);
@@ -94,7 +95,7 @@ public class PatientAgent extends Agent {
             fe.printStackTrace();
         }
 
-        return true;
+        return responders != null && responders.size() > 0;
     }
     
 }
