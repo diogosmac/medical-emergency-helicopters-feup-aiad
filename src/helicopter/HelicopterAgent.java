@@ -85,6 +85,7 @@ public class HelicopterAgent extends Agent {
 
     // Add a subscription?? (be notified when there's a new hospital)
     private boolean dfSearch() {
+        responders = new ArrayList<>();
         DFAgentDescription template = new DFAgentDescription();
         ServiceDescription serviceDescription = new ServiceDescription();
         serviceDescription.setType(AgentType.HOSPITAL);
@@ -102,7 +103,7 @@ public class HelicopterAgent extends Agent {
             fe.printStackTrace();
         }
 
-        return true;
+        return responders != null && responders.size() > 0;
     }
 
     protected void takeDown() {
@@ -118,9 +119,7 @@ public class HelicopterAgent extends Agent {
         this.patientInjury = injury;
         this.busy = true;
 
-        this.dfSearch();
-
-        if (responders != null && responders.size() > 0) {
+        if (this.dfSearch()) {
             int nResponders = responders.size();
             String logMessage = getAID().getLocalName() + ": " +
                     "trying to delegate action [ treat-my-patient ]" +

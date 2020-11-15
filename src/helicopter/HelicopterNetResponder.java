@@ -13,7 +13,7 @@ import injury.Injury;
 
 import java.io.IOException;
 
-public class HelicopterNetResponder  extends ContractNetResponder {
+public class HelicopterNetResponder extends ContractNetResponder {
 
     private final HelicopterAgent helicopter;
 
