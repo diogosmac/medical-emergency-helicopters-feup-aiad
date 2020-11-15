@@ -130,6 +130,8 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
                     " ] from responder [ " + bestProposer.getLocalName() + " ]";
             Logger.writeLog(logMessage, "Helicopter");
             accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+        } else {
+            this.helicopter.setBusy(false);
         }
     }
 
@@ -138,5 +140,7 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
                 "requested action successfully performed " +
                 "by [ " + inform.getSender().getLocalName() + " ]";
         Logger.writeLog(logMessage, "Helicopter");
+
+        this.helicopter.setBusy(false);
     }
 }

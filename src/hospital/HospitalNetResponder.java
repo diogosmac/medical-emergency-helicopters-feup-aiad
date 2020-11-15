@@ -1,6 +1,5 @@
 package hospital;
 
-import injury.InjuryType;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -11,6 +10,7 @@ import jade.proto.ContractNetResponder;
 import utils.HospitalProposal;
 import utils.Location;
 import utils.Logger;
+import injury.InjuryType;
 
 import java.io.IOException;
 

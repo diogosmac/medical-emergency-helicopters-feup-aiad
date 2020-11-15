@@ -1,6 +1,5 @@
 package helicopter;
 
-import injury.Injury;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -10,6 +9,8 @@ import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetResponder;
 import utils.Location;
 import utils.Logger;
+import injury.Injury;
+
 import java.io.IOException;
 
 public class HelicopterNetResponder  extends ContractNetResponder {
@@ -44,6 +45,8 @@ public class HelicopterNetResponder  extends ContractNetResponder {
 
         if (!this.helicopter.isInArea(patientLocation)) { // Switch this
             throw new RefuseException("Out of my area!");
+        } else if (this.helicopter.isBusy()) {
+            throw new RefuseException("Busy!");
         }
 
         // We provide a proposal

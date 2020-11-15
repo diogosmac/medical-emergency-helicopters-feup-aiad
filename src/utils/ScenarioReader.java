@@ -1,14 +1,14 @@
 package utils;
 
-import hospital.HospitalAgent;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import patient.PatientAgent;
 import helicopter.HelicopterAgent;
+import hospital.HospitalAgent;
+import patient.PatientAgent;
 
 import java.io.FileReader;
 import java.util.ArrayList;

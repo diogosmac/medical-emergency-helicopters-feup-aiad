@@ -1,19 +1,18 @@
 package helicopter;
 
-import injury.Injury;
-import injury.InjuryType;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
-import utils.AgentType;
-import utils.Location;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import utils.Logger;
+import utils.AgentType;
+import utils.Location;
+import injury.Injury;
+import injury.InjuryType;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -23,6 +22,7 @@ public class HelicopterAgent extends Agent {
     private int radius;
     private ArrayList<AID> responders = new ArrayList<>();
     private Injury patientInjury;
+    private boolean busy;
 
     public Location getLocation() {
         return location;
@@ -34,6 +34,14 @@ public class HelicopterAgent extends Agent {
 
     public InjuryType getPatientInjuryType() {
         return patientInjury.getType();
+    }
+
+    public boolean isBusy() {
+        return busy;
+    }
+
+    public void setBusy(boolean busy) {
+        this.busy = busy;
     }
 
     public void setup() {
@@ -107,7 +115,8 @@ public class HelicopterAgent extends Agent {
     }
 
     protected boolean performAction(Injury injury) {
-        patientInjury = injury;
+        this.patientInjury = injury;
+        this.busy = true;
 
         this.dfSearch();
 

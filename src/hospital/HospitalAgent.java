@@ -1,6 +1,5 @@
 package hospital;
 
-import injury.InjuryType;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -11,6 +10,7 @@ import jade.lang.acl.MessageTemplate;
 import utils.AgentType;
 import utils.Location;
 import utils.Logger;
+import injury.InjuryType;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -88,7 +88,10 @@ public class HospitalAgent extends Agent {
     }
 
     protected boolean performAction() {
-        //TODO  - do something here
+        if (this.numberOfPatients == this.capacity)
+            return false;
+
+        this.numberOfPatients++;
         return true;
     }
 

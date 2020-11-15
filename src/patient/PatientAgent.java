@@ -1,16 +1,16 @@
 package patient;
 
-import injury.Injury;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.lang.acl.ACLMessage;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import utils.AgentType;
 import utils.Location;
-import jade.lang.acl.ACLMessage;
 import utils.Logger;
+import injury.Injury;
 
 import java.util.ArrayList;
 import java.util.Arrays;
