@@ -76,7 +76,11 @@ public class ScenarioReader {
             x = location.get("x").toString();
             y = location.get("y").toString();
             radius = helicopter.get("radius").toString();
-            String[] args = {x, y, radius};
+            String[] args;
+            if (helicopter.containsKey("speed")) {
+                String speed = helicopter.get("speed").toString();
+                args = new String[]{ x, y, radius, speed };
+            } else args = new String[]{ x, y, radius };
             AgentController hel = container.createNewAgent(
                     "helicopter" + helicopterID++,
                     HelicopterAgent.class.getName(),

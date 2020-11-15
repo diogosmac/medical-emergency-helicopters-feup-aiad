@@ -5,6 +5,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import jade.proto.ContractNetInitiator;
 import utils.HospitalProposal;
+import utils.Location;
 import utils.Logger;
 
 import java.io.IOException;
@@ -14,12 +15,15 @@ import java.util.Vector;
 public class HelicopterNetInitiator extends ContractNetInitiator {
 
     private final HelicopterAgent helicopter;
-    private int nResponders;
+    private int numberOfResponders;
+    private final Location patientLocation;
+    private Location hospitalLocation;
 
-    public HelicopterNetInitiator(HelicopterAgent helicopter, int nResponders, ACLMessage cfp) {
+    public HelicopterNetInitiator(HelicopterAgent helicopter, int numberOfResponders, Location patientLocation, ACLMessage cfp) {
         super(helicopter, cfp);
         this.helicopter = helicopter;
-        this.nResponders = nResponders;
+        this.numberOfResponders = numberOfResponders;
+        this.patientLocation = patientLocation;
     }
 
     protected Vector prepareCfps(ACLMessage cfp) {
@@ -73,7 +77,7 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
                 "proposal was refused " +
                 "by agent [ " + refuse.getSender().getLocalName() + " ] , " +
                 "for reason [ " + refuse.getContent() + " ]";
-        Logger.writeLog(logMessage, "Helicopter");
+        Logger.writeLog(logMessage, Logger.HELICOPTER);
     }
 
     protected void handleFailure(ACLMessage failure) {
@@ -92,15 +96,15 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
             Logger.writeLog(logMessage, Logger.HELICOPTER);
         }
         // Immediate failure --> we will not receive a response from this agent
-        nResponders--;
+        numberOfResponders--;
     }
 
     protected void handleAllResponses(Vector responses, Vector acceptances) {
-        if (responses.size() < nResponders) {
+        if (responses.size() < numberOfResponders) {
             // Some responder didn't reply within the specified timeout
             String logMessage = helicopter.getLocalName() + ": " +
                     "timeout expired, missing " +
-                    (nResponders - responses.size()) + "responses";
+                    (numberOfResponders - responses.size()) + "responses";
             Logger.writeLog(logMessage, Logger.HELICOPTER);
         }
         // Evaluate proposals.
@@ -153,6 +157,18 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
                 "by [ " + inform.getSender().getLocalName() + " ]";
         Logger.writeLog(logMessage, Logger.HELICOPTER);
 
-        this.helicopter.setBusy(false);
+        double distanceToPatient = helicopter.getLocation().getDistance(patientLocation);
+        double distanceToHospital = patientLocation.getDistance(hospitalLocation);
+        double distanceToReturn = hospitalLocation.getDistance(helicopter.getLocation());
+        double totalDistance = distanceToPatient + distanceToHospital + distanceToReturn;
+        double travelTime = totalDistance / helicopter.getSpeed();
+        logMessage = helicopter.getLocalName() + ": " +
+                "starting voyage, " +
+                "at our speed of [ " + helicopter.getSpeed() + " ] , " +
+                "this will take about [ " + travelTime + " ] seconds";
+        Logger.writeLog(logMessage, Logger.HELICOPTER);
+        int travelTimeMillis = (int) travelTime * 1000;
+        helicopter.addBehaviour(
+                new HelicopterTravelingBehaviour(helicopter, travelTimeMillis));
     }
 }

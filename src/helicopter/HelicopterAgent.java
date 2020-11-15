@@ -22,7 +22,9 @@ public class HelicopterAgent extends Agent {
     private int radius;
     private ArrayList<AID> responders = new ArrayList<>();
     private Injury patientInjury;
+    private Location patientLocation;
     private boolean busy;
+    private double speed = 1;
 
     public Location getLocation() {
         return location;
@@ -36,12 +38,20 @@ public class HelicopterAgent extends Agent {
         return patientInjury.getType();
     }
 
+    public void setPatientLocation(Location patientLocation) {
+        this.patientLocation = patientLocation;
+    }
+
     public boolean isBusy() {
         return busy;
     }
 
     public void setBusy(boolean busy) {
         this.busy = busy;
+    }
+
+    public double getSpeed() {
+        return speed;
     }
 
     public void setup() {
@@ -51,6 +61,10 @@ public class HelicopterAgent extends Agent {
 
         this.location = new Location(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
         this.radius = Integer.parseInt(args[2]);
+
+        if (args.length > 3) {
+            this.speed = Double.parseDouble(args[3]);
+        }
 
         String logMessage = getLocalName() + ": " +
                 "waiting for CFP ...";
@@ -132,7 +146,7 @@ public class HelicopterAgent extends Agent {
                     "trying to delegate action [ treat-my-patient ]" +
                     " to one of " + nResponders + " hospitals";
             Logger.writeLog(logMessage, Logger.HELICOPTER);
-            addBehaviour(new HelicopterNetInitiator(this, nResponders, new ACLMessage(ACLMessage.CFP)));
+            addBehaviour(new HelicopterNetInitiator(this, nResponders, patientLocation, new ACLMessage(ACLMessage.CFP)));
         }
         else {
             String logMessage = getLocalName() + ": " +

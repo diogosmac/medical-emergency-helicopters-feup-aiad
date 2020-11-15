@@ -1,0 +1,34 @@
+{
+  "hospitals": [
+    {
+      "x": 20,
+      "y": 30,
+      "patients": 1,
+      "capacity": 5,
+      "specialties": []
+    }
+  ],
+  "helicopters": [
+    {
+      "location":{
+        "x": 30,
+        "y": 20
+      },
+      "radius": 15,
+      "speed": 1.50
+    }
+  ],
+  "patients": [
+    {
+      "location": {
+        "x": 30,
+        "y": 20
+      },
+      "injury":{
+        "type": "BONE",
+        "severity": "20"
+      },
+      "wait": 20
+    }
+  ]
+}

@@ -27,6 +27,7 @@ public class HelicopterNetResponder extends ContractNetResponder {
         Location patientLocation;
         try {
             patientLocation = (Location) cfp.getContentObject();
+            helicopter.setPatientLocation(patientLocation);
         } catch (UnreadableException e) {
             String logMessage = helicopter.getLocalName() + ": " +
                     "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +

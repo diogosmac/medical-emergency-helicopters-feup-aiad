@@ -56,7 +56,7 @@ public class PatientAgent extends Agent {
             String logMessage = getAID().getLocalName() + ": " +
                     "trying to delegate action [ pick-me-up ]" +
                     " to one of " + numberOfResponders + " helicopters";
-            Logger.writeLog(logMessage, "Patient");
+            Logger.writeLog(logMessage, Logger.PATIENT);
 
             if (this.waitPeriod == 0) {
                 addBehaviour(new PatientNetInitiator(this, numberOfResponders, new ACLMessage(ACLMessage.CFP)));
@@ -64,7 +64,7 @@ public class PatientAgent extends Agent {
             else {
                 logMessage = getLocalName() + ": " +
                         "waiting [ " + waitPeriod + " ] seconds before sending out request";
-                Logger.writeLog(logMessage, "Patient");
+                Logger.writeLog(logMessage, Logger.PATIENT);
                 addBehaviour(new PatientWaitBehaviour(this, this.waitPeriod * 1000));
             }
         }
