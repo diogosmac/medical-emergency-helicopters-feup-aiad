@@ -6,6 +6,8 @@ import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import utils.AgentType;
 import utils.Location;
 import utils.Logger;
@@ -54,6 +56,9 @@ public class HospitalAgent extends Agent {
                     " unsuccessful DFRegister";
             Logger.writeLog(logMessage, "Hospital");
         }
+
+        addBehaviour(new HospitalNetResponder(this, MessageTemplate.MatchPerformative(ACLMessage.CFP)));
+
     }
 
     private boolean dfRegister() {
