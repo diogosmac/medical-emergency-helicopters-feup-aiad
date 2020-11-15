@@ -7,5 +7,5 @@ public enum InjuryType implements java.io.Serializable {
     HEART,
     BRAIN,
     BURN,
-    OTHER_EXAMPLES
+    OTHER
 }

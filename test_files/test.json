@@ -1,8 +1,10 @@
 {
   "hospitals":[
     {
-      "x": 20,
-      "y": 30,
+      "location":{
+        "x": 20,
+        "y": 30
+      },
       "patients": 120,
       "capacity": 260,
       "specialties": [
@@ -21,8 +23,10 @@
       ]
     },
     {
-      "x": 30,
-      "y": 40,
+      "location":{
+        "x": 30,
+        "y": 40
+      },
       "patients": 80,
       "capacity": 240,
       "specialties": [
@@ -45,8 +49,10 @@
       ]
     },
     {
-      "x": 70,
-      "y": 10,
+      "location":{
+        "x": 70,
+        "y": 10
+      },
       "patients": 180,
       "capacity": 200,
       "specialties": [
