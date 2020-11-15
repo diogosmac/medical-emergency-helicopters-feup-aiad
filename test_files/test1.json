@@ -108,7 +108,8 @@
       "injury":{
         "type": "BONE",
         "severity": "20"
-      }
+      },
+      "wait": 20
     },
     {
       "location":{

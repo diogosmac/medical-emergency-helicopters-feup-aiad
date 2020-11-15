@@ -19,12 +19,18 @@ public class PatientAgent extends Agent {
 
     private Injury injury;
     private Location position;
+    private int waitPeriod;
     private ArrayList<AID> responders = new ArrayList<>();
+    private int numberOfResponders;
 
     public Injury getInjury() { return injury; }
 
     public ArrayList<AID> getResponders(){
         return responders;
+    }
+
+    public int getNumberOfResponders() {
+        return numberOfResponders;
     }
 
     public Location getPosition() {
@@ -40,17 +46,27 @@ public class PatientAgent extends Agent {
         this.injury = new Injury(injuryType, Integer.parseInt(injurySeverity));
         this.position = new Location(Integer.parseInt(x), Integer.parseInt(y));
 
+        if (args.length > 4) {
+            this.waitPeriod = Integer.parseInt(args[4]);
+        }
+
         this.dfSearch();
 
         if (responders != null && responders.size() > 0) {
-            int nResponders = responders.size();
+            numberOfResponders = responders.size();
 
             String logMessage = getAID().getLocalName() + ": " +
                     "trying to delegate action [ pick-me-up ]" +
-                    " to one of " + nResponders + " helicopters";
+                    " to one of " + numberOfResponders + " helicopters";
             Logger.writeLog(logMessage, "Patient");
 
-            addBehaviour(new PatientNetInitiator(this, nResponders, new ACLMessage(ACLMessage.CFP)));
+            if (this.waitPeriod == 0) {
+                addBehaviour(new PatientNetInitiator(this, numberOfResponders, new ACLMessage(ACLMessage.CFP)));
+            }
+            else {
+                System.out.println("Should wait");
+                addBehaviour(new WaitBehaviour(this, this.waitPeriod * 1000));
+            }
         }
         else {
             String logMessage = getLocalName() + ": " +
