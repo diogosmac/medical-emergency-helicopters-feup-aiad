@@ -77,15 +77,7 @@ public class PatientAgent extends Agent {
     }
 
     protected void takeDown() {
-        String logMessage;
-        try {
-            DFService.deregister(this);
-            logMessage = getLocalName() + ": shutting down";
-        } catch(FIPAException e) {
-            e.printStackTrace();
-            logMessage = getLocalName() + ": " +
-                    "tried to shut down but DFService did not reply";
-        }
+        String logMessage = getLocalName() + ": shutting down";
         Logger.writeLog(logMessage, Logger.PATIENT);
     }
 
