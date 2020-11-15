@@ -39,8 +39,9 @@ public class ScenarioReader {
         for (Object o : hospitals) {
             JSONObject hospital = (JSONObject) o;
             String x, y, patients, capacity;
-            x = hospital.get("x").toString();
-            y = hospital.get("y").toString();
+            JSONObject location = (JSONObject) hospital.get("location");
+            x = location.get("x").toString();
+            y = location.get("y").toString();
             patients = hospital.get("patients").toString();
             capacity = hospital.get("capacity").toString();
             List<String> argList = new ArrayList<>();
