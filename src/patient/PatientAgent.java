@@ -71,9 +71,22 @@ public class PatientAgent extends Agent {
         else {
             String logMessage = getLocalName() + ": " +
                     "no responder specified";
-            Logger.writeLog(logMessage, "Patient");
+            Logger.writeLog(logMessage, Logger.PATIENT);
         }
 
+    }
+
+    protected void takeDown() {
+        String logMessage;
+        try {
+            DFService.deregister(this);
+            logMessage = getLocalName() + ": shutting down";
+        } catch(FIPAException e) {
+            e.printStackTrace();
+            logMessage = getLocalName() + ": " +
+                    "tried to shut down but DFService did not reply";
+        }
+        Logger.writeLog(logMessage, Logger.PATIENT);
     }
 
     private boolean dfSearch() {
@@ -87,7 +100,7 @@ public class PatientAgent extends Agent {
             for (DFAgentDescription dfAgentDescription : result) {
                 String logMessage = getLocalName() + ": " +
                         "found [ " + dfAgentDescription.getName().getLocalName() + " ]";
-                Logger.writeLog(logMessage, "Patient");
+                Logger.writeLog(logMessage, Logger.PATIENT);
                 // Add to list and/to initiate ContractNet to each one of them
                 responders.add(dfAgentDescription.getName());
             }

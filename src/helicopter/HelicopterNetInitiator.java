@@ -24,20 +24,29 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
 
     protected Vector prepareCfps(ACLMessage cfp) {
         Vector v = new Vector();
-        //TODO - decent try catch
+
+        boolean validCFPContent = true;
         try {
             cfp.setContentObject(helicopter.getPatientInjuryType());
         } catch (IOException e) {
-            e.printStackTrace();
+            // TODO: log the exception as we do right now? or add no receivers?
+            validCFPContent = false;
         }
 
         for (AID responder : helicopter.getResponders()) {
             cfp.addReceiver(responder);
 
-            String logMessage = helicopter.getLocalName() + ": " +
-                    "sending CFP [ " + helicopter.getPatientInjuryType() + " ] " +
-                    "to agent [ " + responder.getLocalName() + " ]";
-            Logger.writeLog(logMessage, "Helicopter");
+            String logMessage;
+            if (validCFPContent) {
+                logMessage = helicopter.getLocalName() + ": " +
+                        "sending CFP [ " + helicopter.getPatientInjuryType() + " ] " +
+                        "to agent [ " + responder.getLocalName() + " ]";
+            } else {
+                logMessage = helicopter.getLocalName() + ": " +
+                        "sending CFP with UNREADABLE content (IOException) " +
+                        "to agent [ " + responder.getLocalName() + " ]";
+            }
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
         }
         v.add(cfp);
 
@@ -56,7 +65,7 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
                     "from agent [ " + propose.getSender().getLocalName() + " ]";
             e.printStackTrace();
         }
-        Logger.writeLog(logMessage, "Helicopter");
+        Logger.writeLog(logMessage, Logger.HELICOPTER);
     }
 
     protected void handleRefuse(ACLMessage refuse) {
@@ -74,13 +83,13 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
             String logMessage = helicopter.getLocalName() + ": " +
                     "JADE runtime error [ " + failure.getSender().getLocalName() + " ] - " +
                     "receiver does not exist";
-            Logger.writeLog(logMessage, "Helicopter");
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
         }
         else {
             String logMessage = helicopter.getLocalName() + ": " +
                     "received failure " +
                     "from [ " + failure.getSender().getLocalName() + " ]";
-            Logger.writeLog(logMessage, "Helicopter");
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
         }
         // Immediate failure --> we will not receive a response from this agent
         nResponders--;
@@ -92,7 +101,7 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
             String logMessage = helicopter.getLocalName() + ": " +
                     "timeout expired, missing " +
                     (nResponders - responses.size()) + "responses";
-            Logger.writeLog(logMessage, "Helicopter");
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
         }
         // Evaluate proposals.
         double bestProposal = Double.POSITIVE_INFINITY;
@@ -108,7 +117,6 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
                 acceptances.addElement(reply);
                 HospitalProposal proposal = null;
 
-                //TODO decent try catch
                 try {
                     proposal = (HospitalProposal) (msg.getContentObject());
                     double distance = proposal.getLocation().getDistance(helicopter.getLocation());
@@ -120,16 +128,19 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
                         accept = reply;
                     }
                 } catch (UnreadableException unreadableException) {
-                    unreadableException.printStackTrace();
+                    String logMessage = helicopter.getLocalName() + ": " +
+                            "ignoring UNREADABLE proposal " +
+                            "from agent [ " + msg.getSender().getLocalName() + " ]";
+                    Logger.writeLog(logMessage, Logger.HELICOPTER);
                 }
             }
         }
         // Accept the proposal of the best proposer
         if (accept != null) {
             String logMessage = helicopter.getLocalName() + ": " +
-                    "accepting proposal [ " + bestProposal +
-                    " ] from responder [ " + bestProposer.getLocalName() + " ]";
-            Logger.writeLog(logMessage, "Helicopter");
+                    "accepting proposal [ " + bestProposal + " ] " +
+                    "from responder [ " + bestProposer.getLocalName() + " ]";
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
             accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
         } else {
             this.helicopter.setBusy(false);
@@ -140,7 +151,7 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
         String logMessage = helicopter.getLocalName() + ": " +
                 "requested action successfully performed " +
                 "by [ " + inform.getSender().getLocalName() + " ]";
-        Logger.writeLog(logMessage, "Helicopter");
+        Logger.writeLog(logMessage, Logger.HELICOPTER);
 
         this.helicopter.setBusy(false);
     }

@@ -24,25 +24,28 @@ public class PatientNetInitiator extends ContractNetInitiator {
 
     protected Vector prepareCfps(ACLMessage cfp) {
         Vector v = new Vector();
+
+        boolean validCFPContent = true;
         try {
             cfp.setContentObject(this.patient.getPosition());
         } catch (IOException e) {
-            e.printStackTrace();
+            // TODO: log the exception as we do right now? or add no receivers?
+            validCFPContent = false;
         }
         for (AID responder : patient.getResponders()) {
             cfp.addReceiver(responder);
 
             String logMessage;
-            try {
+            if (validCFPContent) {
                 logMessage = patient.getLocalName() + ": " +
-                        "sending CFP [ " + cfp.getContentObject() + " ] " +
+                        "sending CFP [ " + patient.getPosition() + " ] " +
                         "to agent [ " + responder.getLocalName() + " ]";
-            } catch (UnreadableException e) {
+            } else {
                 logMessage = patient.getLocalName() + ": " +
-                        "sending UNREADABLE CFP" +
+                        "sending CFP with UNREADABLE content (IOException) " +
                         "to agent [ " + responder.getLocalName() + " ]";
             }
-            Logger.writeLog(logMessage, "Patient");
+            Logger.writeLog(logMessage, Logger.PATIENT);
         }
         v.add(cfp);
 
@@ -60,7 +63,7 @@ public class PatientNetInitiator extends ContractNetInitiator {
                     "received UNREADABLE proposal " +
                     "from agent [ " + propose.getSender().getLocalName() + " ]";
         }
-        Logger.writeLog(logMessage, "Patient");
+        Logger.writeLog(logMessage, Logger.PATIENT);
     }
 
     protected void handleRefuse(ACLMessage refuse) {
@@ -78,13 +81,13 @@ public class PatientNetInitiator extends ContractNetInitiator {
             String logMessage = patient.getLocalName() + ": " +
                     "JADE runtime error [ " + failure.getSender().getLocalName() + " ] - " +
                     "receiver does not exist";
-            Logger.writeLog(logMessage, "Patient");
+            Logger.writeLog(logMessage, Logger.PATIENT);
         }
         else {
             String logMessage = patient.getLocalName() + ": " +
                     "received failure " +
                     "from [ " + failure.getSender().getLocalName() + " ]";
-            Logger.writeLog(logMessage, "Patient");
+            Logger.writeLog(logMessage, Logger.PATIENT);
         }
         // Immediate failure --> we will not receive a response from this agent
         nResponders--;
@@ -97,7 +100,7 @@ public class PatientNetInitiator extends ContractNetInitiator {
             String logMessage = patient.getLocalName() + ": " +
                     "timeout expired, missing " +
                     (nResponders - responses.size()) + "responses";
-            Logger.writeLog(logMessage, "Patient");
+            Logger.writeLog(logMessage, Logger.PATIENT);
         }
 
         // Evaluate proposals.
@@ -113,7 +116,6 @@ public class PatientNetInitiator extends ContractNetInitiator {
                 acceptances.addElement(reply);
                 Location proposal = null;
 
-                //TODO decent try catch
                 try {
                     proposal = (Location)(msg.getContentObject());
                     double distance = proposal.getDistance(patient.getPosition());
@@ -123,23 +125,30 @@ public class PatientNetInitiator extends ContractNetInitiator {
                         accept = reply;
                     }
                 } catch (UnreadableException unreadableException) {
-                    unreadableException.printStackTrace();
+                    String logMessage = patient.getLocalName() + ": " +
+                            "ignoring UNREADABLE proposal " +
+                            "from agent [ " + msg.getSender().getLocalName() + " ]";
+                    Logger.writeLog(logMessage, Logger.PATIENT);
                 }
             }
         }
         // Accept the proposal of the best proposer
         if (accept != null) {
             String logMessage = patient.getLocalName() + ": " +
-                    "accepting proposal [ " + bestProposal +
-                    " ] from responder [ " + bestProposer.getLocalName() + " ]";
-            Logger.writeLog(logMessage, "Patient");
+                    "accepting proposal [ " + bestProposal + " ] " +
+                    "from responder [ " + bestProposer.getLocalName() + " ]";
+            Logger.writeLog(logMessage, Logger.PATIENT);
 
             accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-            //TODO - decent try catch
+
             try {
                 accept.setContentObject(patient.getInjury());
             } catch (IOException ioException) {
-                ioException.printStackTrace();
+                logMessage = patient.getLocalName() + ": " +
+                        "couldn't send injury " +
+                        "to responder [ " + bestProposer.getLocalName() + " ] , " +
+                        "and it will fail to perform the action";
+                Logger.writeLog(logMessage, Logger.PATIENT);
             }
         }
     }
@@ -148,6 +157,6 @@ public class PatientNetInitiator extends ContractNetInitiator {
         String logMessage = patient.getLocalName() + ": " +
                 "requested action successfully performed " +
                 "by [ " + inform.getSender().getLocalName() + " ]";
-        Logger.writeLog(logMessage, "Patient");
+        Logger.writeLog(logMessage, Logger.PATIENT);
     }
 }
