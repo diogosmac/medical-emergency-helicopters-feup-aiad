@@ -1,0 +1,54 @@
+{
+  "hospitals": [
+    {
+      "location": {
+        "x": 0,
+        "y": 0
+      },
+      "patients": 975,
+      "capacity": 1000,
+      "specialties": [
+        {
+          "name": "HEART",
+          "competence": 75
+        }
+      ]
+    },
+    {
+      "location": {
+        "x": 50,
+        "y": 50
+      },
+      "patients": 20,
+      "capacity": 100,
+      "specialties": [
+        {
+          "name": "HEART",
+          "competence": 100
+        }
+      ]
+    }
+  ],
+  "helicopters": [
+    {
+      "location": {
+        "x": 10,
+        "y": 10
+      },
+      "radius": 200,
+      "speed": 10
+    }
+  ],
+  "patients": [
+    {
+      "location": {
+        "x": 15,
+        "y": 15
+      },
+      "injury": {
+        "type": "HEART",
+        "severity": 90
+      }
+    }
+  ]
+}
