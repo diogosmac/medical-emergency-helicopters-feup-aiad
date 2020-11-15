@@ -84,7 +84,7 @@ public class HospitalNetResponder extends ContractNetResponder {
         Logger.writeLog(logMessage, "Hospital");
 
         if (hospital.performAction()) {
-            logMessage = hospital.getLocalName() + ": action successfully performed";
+            logMessage = hospital.getLocalName() + ": patient will be treated (action successful)";
             Logger.writeLog(logMessage, "Hospital");
 
             ACLMessage inform = accept.createReply();
@@ -92,7 +92,7 @@ public class HospitalNetResponder extends ContractNetResponder {
             return inform;
         }
         else {
-            logMessage = hospital.getLocalName() + ": action execution failed";
+            logMessage = hospital.getLocalName() + ": no capacity for patient (action failed)";
             Logger.writeLog(logMessage, "Hospital");
             throw new FailureException("unexpected-error");
         }
