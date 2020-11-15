@@ -25,26 +25,21 @@ public class HospitalNetResponder extends ContractNetResponder {
 
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-        String logMessage;
-        try {
-            logMessage = hospital.getLocalName() + ": " +
-                    "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
-                    "Injury Type is [ " + cfp.getContentObject() + " ]";
-        } catch (UnreadableException e) {
-            logMessage = hospital.getLocalName() + ": " +
-                    "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
-                    "UNREADABLE Injury Type";
-        }
-        Logger.writeLog(logMessage, "Hospital");
-
-        //TODO - decent try catch
-        InjuryType injuryType = null;
+        InjuryType injuryType;
         try {
             injuryType = (InjuryType) cfp.getContentObject();
         } catch (UnreadableException e) {
-            e.printStackTrace();
-            throw new NotUnderstoodException("Cound't get injury type");
+            String logMessage = hospital.getLocalName() + ": " +
+                    "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
+                    "Injury Type is UNREADABLE";
+            Logger.writeLog(logMessage, Logger.HOSPITAL);
+            throw new NotUnderstoodException("Couldn't get injury type");
         }
+
+        String logMessage = hospital.getLocalName() + ": " +
+                "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
+                "Injury Type is [ " + injuryType + " ]";
+        Logger.writeLog(logMessage, Logger.HOSPITAL);
 
         int suitability = this.hospital.patientSuitability(injuryType);
         if (suitability == 0)
@@ -54,16 +49,21 @@ public class HospitalNetResponder extends ContractNetResponder {
         Location location = hospital.getLocation();
         HospitalProposal proposal = new HospitalProposal(location, suitability);
 
-        logMessage = hospital.getLocalName() + ": proposing [ " + proposal + " ]";
-        Logger.writeLog(logMessage, "Hospital");
+        logMessage = hospital.getLocalName() + ": " +
+                "proposing [ " + proposal + " ] " +
+                "to agent [ " + cfp.getSender().getLocalName() + " ]";
+        Logger.writeLog(logMessage, Logger.HOSPITAL);
 
         ACLMessage propose = cfp.createReply();
         propose.setPerformative(ACLMessage.PROPOSE);
 
-        //TODO - decent try catch
         try {
             propose.setContentObject(proposal);
         } catch (IOException e) {
+            logMessage = hospital.getLocalName() + ": " +
+                    "could not respond with proposal to CFP " +
+                    "from [ " + cfp.getSender().getLocalName() + " ]";
+            Logger.writeLog(logMessage, Logger.HOSPITAL);
             e.printStackTrace();
         }
         return propose;
@@ -81,11 +81,11 @@ public class HospitalNetResponder extends ContractNetResponder {
                     "accepted UNREADABLE proposal " +
                     "from agent [ " + propose.getSender().getLocalName() + " ]";
         }
-        Logger.writeLog(logMessage, "Hospital");
+        Logger.writeLog(logMessage, Logger.HOSPITAL);
 
         if (hospital.performAction()) {
             logMessage = hospital.getLocalName() + ": patient will be treated (action successful)";
-            Logger.writeLog(logMessage, "Hospital");
+            Logger.writeLog(logMessage, Logger.HOSPITAL);
 
             ACLMessage inform = accept.createReply();
             inform.setPerformative(ACLMessage.INFORM);
@@ -93,7 +93,7 @@ public class HospitalNetResponder extends ContractNetResponder {
         }
         else {
             logMessage = hospital.getLocalName() + ": no capacity for patient (action failed)";
-            Logger.writeLog(logMessage, "Hospital");
+            Logger.writeLog(logMessage, Logger.HOSPITAL);
             throw new FailureException("unexpected-error");
         }
     }
@@ -102,6 +102,6 @@ public class HospitalNetResponder extends ContractNetResponder {
         String logMessage = hospital.getLocalName() + ": " +
                 "proposal rejected " +
                 "by agent [ " + reject.getSender().getLocalName() + " ]";
-        Logger.writeLog(logMessage, "Hospital");
+        Logger.writeLog(logMessage, Logger.HOSPITAL);
     }
 }

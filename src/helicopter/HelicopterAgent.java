@@ -54,12 +54,12 @@ public class HelicopterAgent extends Agent {
 
         String logMessage = getLocalName() + ": " +
                 "waiting for CFP ...";
-        Logger.writeLog(logMessage, "Helicopter");
+        Logger.writeLog(logMessage, Logger.HELICOPTER);
 
         if (!this.dfRegister()) {
             logMessage = getLocalName() + ": " +
                     " unsuccessful DFRegister";
-            Logger.writeLog(logMessage, "Helicopter");
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
         }
 
         addBehaviour(new HelicopterNetResponder(this, MessageTemplate.MatchPerformative(ACLMessage.CFP)));
@@ -94,7 +94,7 @@ public class HelicopterAgent extends Agent {
             for (DFAgentDescription dfAgentDescription : result) {
                 String logMessage = getLocalName() + ": " +
                         "found [ " + dfAgentDescription.getName().getLocalName() + " ]";
-                Logger.writeLog(logMessage, "Helicopter");
+                Logger.writeLog(logMessage, Logger.HELICOPTER);
                 // Add to list and/to initiate ContractNet to each one of them
                 responders.add(dfAgentDescription.getName());
             }
@@ -106,15 +106,22 @@ public class HelicopterAgent extends Agent {
     }
 
     protected void takeDown() {
+        String logMessage;
         try {
             DFService.deregister(this);
+            logMessage = getLocalName() + ": shutting down";
         } catch(FIPAException e) {
             e.printStackTrace();
+            logMessage = getLocalName() + ": " +
+                    "tried to shut down but DFService did not reply";
         }
-        // Log end of service
+        Logger.writeLog(logMessage, Logger.HELICOPTER);
     }
 
     protected boolean performAction(Injury injury) {
+        if (injury == null)
+            return false;
+
         this.patientInjury = injury;
         this.busy = true;
 
@@ -125,13 +132,13 @@ public class HelicopterAgent extends Agent {
             String logMessage = getAID().getLocalName() + ": " +
                     "trying to delegate action [ treat-my-patient ]" +
                     " to one of " + nResponders + " hospitals";
-            Logger.writeLog(logMessage, "Helicopter");
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
             addBehaviour(new HelicopterNetInitiator(this, nResponders, new ACLMessage(ACLMessage.CFP)));
         }
         else {
             String logMessage = getLocalName() + ": " +
                     "no responder specified";
-            Logger.writeLog(logMessage, "Helicopter");
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
         }
 
         return true;

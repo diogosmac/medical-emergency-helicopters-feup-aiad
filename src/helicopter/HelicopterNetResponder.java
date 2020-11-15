@@ -24,24 +24,21 @@ public class HelicopterNetResponder  extends ContractNetResponder {
 
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-        String logMessage;
-        try {
-            logMessage = helicopter.getLocalName() + ": " +
-                    "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
-                    "Location is [ " + cfp.getContentObject() + " ]";
-        } catch (UnreadableException e) {
-            logMessage = helicopter.getLocalName() + ": " +
-                    "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
-                    "UNREADABLE Location";
-        }
-        Logger.writeLog(logMessage, "Helicopter");
         Location patientLocation;
         try {
-             patientLocation = (Location) cfp.getContentObject();
+            patientLocation = (Location) cfp.getContentObject();
         } catch (UnreadableException e) {
-            e.printStackTrace();
-            throw new NotUnderstoodException("Couldn't understand location!");
+            String logMessage = helicopter.getLocalName() + ": " +
+                    "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
+                    "Location is UNREADABLE";
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
+            throw new NotUnderstoodException("Couldn't understand location");
         }
+
+        String logMessage = helicopter.getLocalName() + ": " +
+                    "CFP received from [ " + cfp.getSender().getLocalName() + " ] , " +
+                    "Location is [ " + patientLocation + " ]";
+        Logger.writeLog(logMessage, Logger.HELICOPTER);
 
         if (!this.helicopter.isInArea(patientLocation)) { // Switch this
             throw new RefuseException("Out of my area!");
@@ -53,15 +50,18 @@ public class HelicopterNetResponder  extends ContractNetResponder {
         Location proposal = helicopter.getLocation();
 
         logMessage = helicopter.getLocalName() + ": proposing [ " + proposal + " ]";
-        Logger.writeLog(logMessage, "Helicopter");
+        Logger.writeLog(logMessage, Logger.HELICOPTER);
 
         ACLMessage propose = cfp.createReply();
         propose.setPerformative(ACLMessage.PROPOSE);
 
-        //TODO - decent try catch
         try {
             propose.setContentObject(proposal);
         } catch (IOException e) {
+            logMessage = helicopter.getLocalName() + ": " +
+                    "could not respond with proposal to CFP " +
+                    "from [ " + cfp.getSender().getLocalName() + " ]";
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
             e.printStackTrace();
         }
         return propose;
@@ -79,19 +79,20 @@ public class HelicopterNetResponder  extends ContractNetResponder {
                     "accepted UNREADABLE proposal " +
                     "from agent [ " + propose.getSender().getLocalName() + " ]";
         }
-        Logger.writeLog(logMessage, "Helicopter");
+        Logger.writeLog(logMessage, Logger.HELICOPTER);
 
-        //TODO decent try catch
-        Injury injury = null;
+        Injury injury;
         try {
             injury = (Injury) accept.getContentObject();
         } catch (UnreadableException e) {
-            e.printStackTrace();
+            // error will be handled by making the helicopter fail
+            // to perform the action, as there is no valid injury
+            injury = null;
         }
 
         if (helicopter.performAction(injury)) {
             logMessage = helicopter.getLocalName() + ": action successfully performed";
-            Logger.writeLog(logMessage, "Helicopter");
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
 
             ACLMessage inform = accept.createReply();
             inform.setPerformative(ACLMessage.INFORM);
@@ -99,7 +100,7 @@ public class HelicopterNetResponder  extends ContractNetResponder {
         }
         else {
             logMessage = helicopter.getLocalName() + ": action execution failed";
-            Logger.writeLog(logMessage, "Helicopter");
+            Logger.writeLog(logMessage, Logger.HELICOPTER);
             throw new FailureException("unexpected-error");
         }
     }
@@ -108,6 +109,6 @@ public class HelicopterNetResponder  extends ContractNetResponder {
         String logMessage = helicopter.getLocalName() + ": " +
                 "proposal rejected " +
                 "by agent [ " + reject.getSender().getLocalName() + " ]";
-        Logger.writeLog(logMessage, "Helicopter");
+        Logger.writeLog(logMessage, Logger.HELICOPTER);
     }
 }

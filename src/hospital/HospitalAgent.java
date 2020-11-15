@@ -54,7 +54,7 @@ public class HospitalAgent extends Agent {
         if (!this.dfRegister()) {
             String logMessage = getLocalName() + ": " +
                     " unsuccessful DFRegister";
-            Logger.writeLog(logMessage, "Hospital");
+            Logger.writeLog(logMessage, Logger.HOSPITAL);
         }
 
         addBehaviour(new HospitalNetResponder(this, MessageTemplate.MatchPerformative(ACLMessage.CFP)));
@@ -79,12 +79,16 @@ public class HospitalAgent extends Agent {
     }
 
     protected void takeDown() {
+        String logMessage;
         try {
             DFService.deregister(this);
+            logMessage = getLocalName() + ": shutting down";
         } catch(FIPAException e) {
             e.printStackTrace();
+            logMessage = getLocalName() + ": " +
+                    "tried to shut down but DFService did not reply";
         }
-        // Log end of service
+        Logger.writeLog(logMessage, Logger.HOSPITAL);
     }
 
     protected boolean performAction() {

@@ -13,6 +13,10 @@ import java.util.Arrays;
 
 public class Logger {
 
+    public static final String HELICOPTER = "Helicopter";
+    public static final String HOSPITAL = "Hospital";
+    public static final String PATIENT = "Patient";
+
     private static final SimpleDateFormat filenameDateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
     private static final SimpleDateFormat logDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static final String fileExtension = ".aiad";
@@ -70,13 +74,13 @@ public class Logger {
         Path path = null;
 
         switch (logSource) {
-            case "Helicopter":
+            case HELICOPTER:
                 path = outputHelicopters;
                 break;
-            case "Hospital":
+            case HOSPITAL:
                 path = outputHospitals;
                 break;
-            case "Patient":
+            case PATIENT:
                 path = outputPatients;
                 break;
             default:
