@@ -12,12 +12,7 @@ import jade.wrapper.StaleProxyException;
 
 public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
-	private int N = 10;
-
-	private int FILTER_SIZE = 5;
-	
-	private double FAILURE_PROBABILITY_GOOD_PROVIDER = 0.2;
-	private double FAILURE_PROBABILITY_BAD_PROVIDER = 0.8;
+	private int N = 50;
 	
 	private int N_CONTRACTS = 100;
 	
@@ -33,30 +28,6 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
 	public void setN(int N) {
 		this.N = N;
-	}
-
-	public int getFILTER_SIZE() {
-		return FILTER_SIZE;
-	}
-
-	public void setFILTER_SIZE(int FILTER_SIZE) {
-		this.FILTER_SIZE = FILTER_SIZE;
-	}
-
-	public double getFAILURE_PROBABILITY_GOOD_PROVIDER() {
-		return FAILURE_PROBABILITY_GOOD_PROVIDER;
-	}
-
-	public void setFAILURE_PROBABILITY_GOOD_PROVIDER(double FAILURE_PROBABILITY_GOOD_PROVIDER) {
-		this.FAILURE_PROBABILITY_GOOD_PROVIDER = FAILURE_PROBABILITY_GOOD_PROVIDER;
-	}
-
-	public double getFAILURE_PROBABILITY_BAD_PROVIDER() {
-		return FAILURE_PROBABILITY_BAD_PROVIDER;
-	}
-
-	public void setFAILURE_PROBABILITY_BAD_PROVIDER(double FAILURE_PROBABILITY_BAD_PROVIDER) {
-		this.FAILURE_PROBABILITY_BAD_PROVIDER = FAILURE_PROBABILITY_BAD_PROVIDER;
 	}
 
 	public int getN_CONTRACTS() {
@@ -112,19 +83,19 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 			// create patients
 			for (int i = 0; i < N_PATIENTS; i++) {
 				PatientAgent pa = new PatientAgent();
-				agentContainer.acceptNewAgent("GoodProvider" + i, pa).start();
+				agentContainer.acceptNewAgent("Patient" + i, pa).start();
 			}
 
 			// create helicopters
 			for (int i = 0; i < N_HELICOPTERS; i++) {
 				HelicopterAgent ha = new HelicopterAgent();
-				agentContainer.acceptNewAgent("GoodProvider" + i, ha).start();
+				agentContainer.acceptNewAgent("Helicopter" + i, ha).start();
 			}
 
 			// create hospitals
 			for (int i = 0; i < N_HOSPITALS; i++) {
 				HospitalAgent ha = new HospitalAgent();
-				agentContainer.acceptNewAgent("GoodProvider" + i, ha).start();
+				agentContainer.acceptNewAgent("Hospital" + i, ha).start();
 			}
 
 
@@ -133,7 +104,6 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 		}
 		
 	}
-
 
 	/**
 	 * Launching Repast3
