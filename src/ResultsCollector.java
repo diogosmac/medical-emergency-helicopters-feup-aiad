@@ -3,16 +3,16 @@ import jade.content.lang.Codec.CodecException;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
+import jade.core.AID;
 import sajas.core.Agent;
 import sajas.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.wrapper.ControllerException;
 
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class ResultsCollector extends Agent {
 
@@ -22,13 +22,13 @@ public class ResultsCollector extends Agent {
 	
 	private long startTime = System.currentTimeMillis();
 
-	//todo - set right parameters
-	//private Map<Integer,ArrayList<ArrayList<ContractOutcome>>> aggregatedResults = new TreeMap<Integer, ArrayList<ArrayList<ContractOutcome>>>();
+	//era suposto este arrayLIst ser um par onde guardamos: 1- o tempo em que o patiente enviou o primeiro "pedido"; 2- o tempo em que o paciente chega ao hospital.
+	private Map<AID, ArrayList<Long>> timeForPatient = new HashMap<>();
+	private Map<AID, Integer> treatmentQualityForPatient = new HashMap<>();
 	
 	public ResultsCollector(int nResults) {
 		this.nResults = nResults;
 	}
-
 	
 	@Override
 	public void setup() {
@@ -43,18 +43,7 @@ public class ResultsCollector extends Agent {
 		long took = System.currentTimeMillis() - startTime;
 		System.out.println("Took: \t" + took);
 
-		//todo - stuff
-		/*for(int consumerType : aggregatedResults.keySet()) {
-			ArrayList<ArrayList<ContractOutcome>> resultsForConsumerType = aggregatedResults.get(consumerType);
-			for(ArrayList<ContractOutcome> contractOutcomes : resultsForConsumerType) {
-				System.out.print(consumerType);
-				for(ContractOutcome contractOutcome : contractOutcomes) {
-					System.out.print("\t" + contractOutcome.getValue());
-				}
-				System.out.println();
-			}
-		}*/
-		
+		//todo - actually print results
 	}
 
 	
@@ -62,13 +51,15 @@ public class ResultsCollector extends Agent {
 
 		private static final long serialVersionUID = 1L;
 
-
-		/*private MessageTemplate template =
-				MessageTemplate.and(
-						MessageTemplate.MatchPerformative(ACLMessage.INFORM));*/
+		private MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 
 		@Override
 		public void action() {
+
+			//todo - ouvir todas as mensagens INFORM enviadas pelo paciente para o results collector -> para cada uma guardar no map o aid do paciente + o tempo autal
+			//todo - ouvir todas as mensagens INFORM enviadas pelo helicoptero para o results collector
+			// 		-> para cada uma guardar no map, na entrada com o aid do paciente (que vem na mensagem) o tempo atual (no segundo elemento da lista)
+			//		-> para cada uma guardar no outro map, uma entrada com o aid do paciente e a qualidade do serviço do hospital (que vem na mensagem)
 
 			/*
 			ACLMessage inform = myAgent.receive(template);
