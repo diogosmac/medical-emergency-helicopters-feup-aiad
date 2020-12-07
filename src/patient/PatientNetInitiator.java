@@ -151,6 +151,16 @@ public class PatientNetInitiator extends ContractNetInitiator {
                 Logger.writeLog(logMessage, Logger.PATIENT);
             }
         }
+
+        //inform Results Collector
+        ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+        try {
+            msg.setContentObject("Patient starting communication.");
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        msg.addReceiver(patient.getResultsCollector());
+        patient.send(msg);
     }
 
     protected void handleInform(ACLMessage inform) {

@@ -23,8 +23,10 @@ public class HelicopterAgent extends Agent {
     private ArrayList<AID> responders = new ArrayList<>();
     private Injury patientInjury;
     private Location patientLocation;
+    private AID patient;
     private boolean busy;
     private double speed = 1;
+    private AID resultsCollector;
 
     public Location getLocation() {
         return location;
@@ -53,6 +55,14 @@ public class HelicopterAgent extends Agent {
     public double getSpeed() {
         return speed;
     }
+
+    public AID getResultsCollector(){ return resultsCollector; }
+
+    public void setResultsCollector(AID resultsCollector){ this.resultsCollector = resultsCollector; }
+
+    public AID getPatient() { return patient; }
+
+    public void setPatient(AID patient) { this.patient = patient; }
 
     public void setup() {
 

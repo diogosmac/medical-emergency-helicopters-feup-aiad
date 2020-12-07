@@ -22,6 +22,7 @@ public class PatientAgent extends Agent {
     private int waitPeriod = 0;
     private ArrayList<AID> responders = new ArrayList<>();
     private int numberOfResponders;
+    private AID resultsCollector = null;
 
     public Injury getInjury() { return injury; }
 
@@ -36,6 +37,10 @@ public class PatientAgent extends Agent {
     public Location getPosition() {
         return position;
     }
+
+    public AID getResultsCollector(){ return resultsCollector; }
+
+    public void setResultsCollector(AID resultsCollector){ this.resultsCollector = resultsCollector; }
 
     public void setup() {
 
@@ -102,5 +107,4 @@ public class PatientAgent extends Agent {
 
         return responders != null && responders.size() > 0;
     }
-    
 }

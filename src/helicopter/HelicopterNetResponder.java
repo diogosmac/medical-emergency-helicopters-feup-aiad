@@ -25,6 +25,8 @@ public class HelicopterNetResponder extends ContractNetResponder {
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
         Location patientLocation;
+        helicopter.setPatient(cfp.getSender());
+
         try {
             patientLocation = (Location) cfp.getContentObject();
             helicopter.setPatientLocation(patientLocation);

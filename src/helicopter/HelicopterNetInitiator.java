@@ -19,6 +19,7 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
     private int numberOfResponders;
     private final Location patientLocation;
     private Location hospitalLocation;
+    private Integer hospitalSuitability;
 
     public HelicopterNetInitiator(HelicopterAgent helicopter, int numberOfResponders, Location patientLocation, ACLMessage cfp) {
         super(helicopter, cfp);
@@ -132,6 +133,7 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
                         bestProposer = msg.getSender();
                         accept = reply;
                         this.hospitalLocation = proposal.getLocation();
+                        this.hospitalSuitability = suitability;
                     }
                 } catch (UnreadableException unreadableException) {
                     String logMessage = helicopter.getLocalName() + ": " +
@@ -171,6 +173,6 @@ public class HelicopterNetInitiator extends ContractNetInitiator {
         Logger.writeLog(logMessage, Logger.HELICOPTER);
         int travelTimeMillis = (int) travelTime * 1000;
         helicopter.addBehaviour(
-                new HelicopterTravelingBehaviour(helicopter, travelTimeMillis));
+                new HelicopterTravelingBehaviour(helicopter, travelTimeMillis, hospitalSuitability));
     }
 }
