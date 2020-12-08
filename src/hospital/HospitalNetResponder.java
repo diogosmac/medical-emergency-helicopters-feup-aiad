@@ -1,12 +1,12 @@
 package hospital;
 
+import sajas.proto.ContractNetResponder;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import jade.proto.ContractNetResponder;
 import utils.HospitalProposal;
 import utils.Location;
 import utils.Logger;

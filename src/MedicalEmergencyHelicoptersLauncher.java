@@ -4,6 +4,7 @@ import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import patient.PatientAgent;
+import sajas.core.Agent;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;

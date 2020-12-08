@@ -1,8 +1,8 @@
 package helicopter;
 
+import sajas.core.Agent;
 import jade.core.AID;
-import jade.core.Agent;
-import jade.domain.DFService;
+import sajas.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;

@@ -1,7 +1,7 @@
 package helicopter;
 
-import jade.core.Agent;
-import jade.core.behaviours.WakerBehaviour;
+import sajas.core.Agent;
+import sajas.core.behaviours.WakerBehaviour;
 import jade.lang.acl.ACLMessage;
 import utils.Logger;
 import utils.PatientFinished;
