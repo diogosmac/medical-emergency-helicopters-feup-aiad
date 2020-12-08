@@ -2,11 +2,11 @@ package patient;
 
 import sajas.core.Agent;
 import jade.core.AID;
-import jade.lang.acl.ACLMessage;
 import sajas.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
 import utils.AgentType;
 import utils.Location;
 import utils.Logger;

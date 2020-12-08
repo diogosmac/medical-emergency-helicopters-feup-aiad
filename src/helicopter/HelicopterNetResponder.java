@@ -1,12 +1,12 @@
 package helicopter;
 
+import sajas.proto.ContractNetResponder;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
-import sajas.proto.ContractNetResponder;
 import utils.Location;
 import utils.Logger;
 import injury.Injury;

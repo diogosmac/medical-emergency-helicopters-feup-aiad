@@ -1,9 +1,9 @@
 package patient;
 
 import jade.core.AID;
+import sajas.proto.ContractNetInitiator;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
-import sajas.proto.ContractNetInitiator;
 import utils.Location;
 import utils.Logger;
 

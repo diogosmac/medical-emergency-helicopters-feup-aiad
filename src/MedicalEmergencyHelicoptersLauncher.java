@@ -1,10 +1,9 @@
 import helicopter.HelicopterAgent;
 import hospital.HospitalAgent;
+import patient.PatientAgent;
 import jade.core.AID;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
-import patient.PatientAgent;
-import sajas.core.Agent;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
@@ -19,9 +18,11 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 	
 	public static final boolean USE_RESULTS_COLLECTOR = true;
 	
-	public static final boolean SEPARATE_CONTAINERS = false;
+	public static final boolean SEPARATE_CONTAINERS = true;
 	private ContainerController mainContainer;
-	private ContainerController agentContainer;
+	private ContainerController hospitalContainer;
+	private ContainerController helicopterContainer;
+	private ContainerController patientContainer;
 	
 	public int getN() {
 		return N;
@@ -57,10 +58,19 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 		mainContainer = rt.createMainContainer(p1);
 		
 		if(SEPARATE_CONTAINERS) {
-			Profile p2 = new ProfileImpl();
-			agentContainer = rt.createAgentContainer(p2);
+			Profile hospitalProfile = new ProfileImpl();
+			hospitalProfile.setParameter(Profile.CONTAINER_NAME, "Hospitals");
+			hospitalContainer = rt.createAgentContainer(hospitalProfile);
+			Profile helicopterProfile = new ProfileImpl();
+			helicopterProfile.setParameter(Profile.CONTAINER_NAME, "Helicopters");
+			 helicopterContainer = rt.createAgentContainer(helicopterProfile);
+			Profile patientProfile = new ProfileImpl();
+			patientProfile.setParameter(Profile.CONTAINER_NAME, "Patients");
+			patientContainer = rt.createAgentContainer(patientProfile);
 		} else {
-			agentContainer = mainContainer;
+			hospitalContainer = mainContainer;
+			helicopterContainer = mainContainer;
+			patientContainer = mainContainer;
 		}
 		
 		launchAgents();
@@ -84,19 +94,19 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 			// create patients
 			for (int i = 0; i < N_PATIENTS; i++) {
 				PatientAgent pa = new PatientAgent();
-				agentContainer.acceptNewAgent("Patient" + i, pa).start();
+				patientContainer.acceptNewAgent("Patient" + i, pa).start();
 			}
 
 			// create helicopters
 			for (int i = 0; i < N_HELICOPTERS; i++) {
 				HelicopterAgent ha = new HelicopterAgent();
-				agentContainer.acceptNewAgent("Helicopter" + i, ha).start();
+				helicopterContainer.acceptNewAgent("Helicopter" + i, ha).start();
 			}
 
 			// create hospitals
 			for (int i = 0; i < N_HOSPITALS; i++) {
 				HospitalAgent ha = new HospitalAgent();
-				agentContainer.acceptNewAgent("Hospital" + i, ha).start();
+				hospitalContainer.acceptNewAgent("Hospital" + i, ha).start();
 			}
 
 

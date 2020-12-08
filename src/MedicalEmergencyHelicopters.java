@@ -2,7 +2,6 @@ import jade.core.Runtime;
 import jade.core.ProfileImpl;
 import jade.core.Profile;
 import jade.wrapper.AgentContainer;
-import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
 import utils.Logger;
 import utils.ScenarioReader;
