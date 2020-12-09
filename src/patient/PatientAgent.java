@@ -16,13 +16,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class PatientAgent extends Agent {
-
+    
     private Injury injury;
     private Location position;
     private int waitPeriod = 0;
     private ArrayList<AID> responders = new ArrayList<>();
     private int numberOfResponders;
     private AID resultsCollector = null;
+
+    public PatientAgent() {}
+
+    public PatientAgent(Object[] args) {
+        this.setArguments(args);
+    }
 
     public Injury getInjury() { return injury; }
 

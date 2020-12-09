@@ -28,6 +28,12 @@ public class HelicopterAgent extends Agent {
     private double speed = 1;
     private AID resultsCollector;
 
+    public HelicopterAgent() {}
+
+    public HelicopterAgent(Object[] args) {
+        this.setArguments(args);
+    }
+
     public Location getLocation() {
         return location;
     }

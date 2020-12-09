@@ -22,6 +22,12 @@ public class HospitalAgent extends Agent {
     private int capacity;
     private EnumMap<InjuryType, Integer> levelOfCompetence;
 
+    public HospitalAgent() {}
+
+    public HospitalAgent(Object[] args) {
+        this.setArguments(args);
+    }
+
     public Location getLocation() {
         return location;
     }
