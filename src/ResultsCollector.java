@@ -52,8 +52,8 @@ public class ResultsCollector extends Agent {
 		@Override
 		public void action() {
 
-			//ouvir todas as mensagens INFORM enviadas pelo paciente para o results collector -> para cada uma guardar no map o aid do paciente + o tempo autal
-			//ouvir todas as mensagens INFORM enviadas pelo helicoptero para o results collector
+			// ouvir todas as mensagens INFORM enviadas pelo paciente para o results collector -> para cada uma guardar no map o aid do paciente + o tempo autal
+			// ouvir todas as mensagens INFORM enviadas pelo helicoptero para o results collector
 			// 		-> para cada uma guardar no map, na entrada com o aid do paciente (que vem na mensagem) o tempo atual (no segundo elemento da lista)
 			//		-> para cada uma guardar no outro map, uma entrada com o aid do paciente e a qualidade do serviço do hospital (que vem na mensagem)
 
