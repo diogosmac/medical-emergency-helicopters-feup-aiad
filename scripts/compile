@@ -1,7 +1,6 @@
 #!/bin/sh
-cp="build;jade/lib/jade.jar;lib/json-simple-1.1.1.jar;lib/junit-4.10.jar;lib/hamcrest-code-1.1.jar;lib/repast.jar;lib/SAJaS.jar"
+cp="build;jade/lib/jade.jar;lib/json-simple-1.1.1.jar;lib/junit-4.10.jar;lib/hamcrest-code-1.1.jar;lib/SAJaS.jar;repastj/repastj.jar"
 
 javac src/*.java src/*/*.java \
   -classpath $cp \
-  -d build \
-  > /dev/null 2>&1
+  -d build
