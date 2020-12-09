@@ -24,7 +24,13 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 	private ContainerController mainContainer;
 	private ContainerController hospitalContainer;
 	private ContainerController helicopterContainer;
-	private ContainerController patientContainer;
+  private ContainerController patientContainer;
+  
+  private String jsonPath;
+
+  public MedicalEmergencyHelicoptersLauncher(String jsonPath) {
+    this.jsonPath = jsonPath;
+  }
 	
 	public int getN() {
 		return N;
@@ -93,7 +99,7 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 				resultsCollectorAID = resultsCollector.getAID();
 			}
 
-			ScenarioReader.readScenario(hospitalContainer, helicopterContainer, patientContainer, "test_files/test.json");
+			ScenarioReader.readScenario(hospitalContainer, helicopterContainer, patientContainer, this.jsonPath);
 			// create patients
 			/*for (int i = 0; i < N_PATIENTS; i++) {
 				PatientAgent pa = new PatientAgent();
@@ -125,11 +131,20 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 	 */
 	public static void main(String[] args) {
 
-		Logger.init(true);
+      if (args.length != 2) {
+        System.out.println("Usage: java MedicalEmergencyHelicopters <json-file> [ <test> ]\n"
+            + "       json-file:  name of file (from test_files directory) containing helicopters, hospitals and patients\n"
+            + "       test:       FALSE (default) if logger should document execution, TRUE if testing only");
+        System.exit(1);
+      }
 
-		SimInit init = new SimInit();
-		init.setNumRuns(1);   // works only in batch mode
-		init.loadModel(new MedicalEmergencyHelicoptersLauncher(), null, true);
-	}
+      String jsonPath = "test_files/" + args[0] + ".json";
+      Logger.init(Boolean.parseBoolean(args[1]));
+
+  		SimInit init = new SimInit();
+	  	init.setNumRuns(1);   // works only in batch mode
+		  init.loadModel(new MedicalEmergencyHelicoptersLauncher(jsonPath), null, true);
+
+    }
 
 }
