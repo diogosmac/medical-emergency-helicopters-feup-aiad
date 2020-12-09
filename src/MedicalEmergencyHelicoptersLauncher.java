@@ -9,6 +9,8 @@ import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
 import uchicago.src.sim.engine.SimInit;
 import jade.wrapper.StaleProxyException;
+import utils.Logger;
+import utils.ScenarioReader;
 
 public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
@@ -90,9 +92,10 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 				mainContainer.acceptNewAgent("ResultsCollector", resultsCollector).start();
 				resultsCollectorAID = resultsCollector.getAID();
 			}
-			
+
+			ScenarioReader.readScenario(hospitalContainer, helicopterContainer, patientContainer, "test_files/test.json");
 			// create patients
-			for (int i = 0; i < N_PATIENTS; i++) {
+			/*for (int i = 0; i < N_PATIENTS; i++) {
 				PatientAgent pa = new PatientAgent();
 				patientContainer.acceptNewAgent("Patient" + i, pa).start();
 			}
@@ -107,7 +110,7 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 			for (int i = 0; i < N_HOSPITALS; i++) {
 				HospitalAgent ha = new HospitalAgent();
 				hospitalContainer.acceptNewAgent("Hospital" + i, ha).start();
-			}
+			}*/
 
 
 		} catch (StaleProxyException e) {
@@ -121,6 +124,9 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
+		Logger.init(true);
+
 		SimInit init = new SimInit();
 		init.setNumRuns(1);   // works only in batch mode
 		init.loadModel(new MedicalEmergencyHelicoptersLauncher(), null, true);
