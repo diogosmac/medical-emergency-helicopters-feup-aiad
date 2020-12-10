@@ -59,6 +59,22 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 	}
 
 	@Override
+	public void setup() {
+		super.setup();
+
+		// property descriptors
+		// ...
+	}
+
+	@Override
+	public void begin() {
+		super.begin();
+
+		// display surfaces, spaces, displays, plots, ...
+		// ...
+	}
+
+	@Override
 	protected void launchJADE() {
 		
 		Runtime rt = Runtime.instance();
