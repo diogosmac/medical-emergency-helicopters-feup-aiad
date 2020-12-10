@@ -43,10 +43,10 @@ public class HelicopterNetResponder extends ContractNetResponder {
                     "Location is [ " + patientLocation + " ]";
         Logger.writeLog(logMessage, Logger.HELICOPTER);
 
-        if (!this.helicopter.isInArea(patientLocation)) { // Switch this
-            throw new RefuseException("Out of my area!");
-        } else if (this.helicopter.isBusy()) {
+        if (this.helicopter.isBusy()) {
             throw new RefuseException("Busy!");
+        } else if (!this.helicopter.isInArea(patientLocation)) {
+            throw new RefuseException("Out of my area!");
         }
 
         // We provide a proposal

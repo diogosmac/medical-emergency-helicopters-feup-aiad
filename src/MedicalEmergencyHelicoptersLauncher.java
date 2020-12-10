@@ -14,152 +14,134 @@ import utils.ScenarioReader;
 
 public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
-	private int N = 50;
-	
-	private int N_CONTRACTS = 100;
-	
-	public static final boolean USE_RESULTS_COLLECTOR = true;
-	
-	public static final boolean SEPARATE_CONTAINERS = true;
-	private ContainerController mainContainer;
-	private ContainerController hospitalContainer;
-	private ContainerController helicopterContainer;
-  private ContainerController patientContainer;
-  
-  private String jsonPath;
+    private int N = 50;
 
-  public MedicalEmergencyHelicoptersLauncher(String jsonPath) {
-    this.jsonPath = jsonPath;
-  }
-	
-	public int getN() {
-		return N;
-	}
+    private int N_CONTRACTS = 100;
 
-	public void setN(int N) {
-		this.N = N;
-	}
+    public static final boolean SEPARATE_CONTAINERS = true;
+    private ContainerController mainContainer;
+    private ContainerController hospitalContainer;
+    private ContainerController helicopterContainer;
+    private ContainerController patientContainer;
 
-	public int getN_CONTRACTS() {
-		return N_CONTRACTS;
-	}
+    private final String jsonPath;
 
-	public void setN_CONTRACTS(int N_CONTRACTS) {
-		this.N_CONTRACTS = N_CONTRACTS;
-	}
+    public MedicalEmergencyHelicoptersLauncher(String jsonPath) {
+        this.jsonPath = jsonPath;
+    }
 
-	@Override
-	public String[] getInitParam() {
-		return new String[0];
-	}
+    public int getN() {
+        return N;
+    }
 
-	@Override
-	public String getName() {
-		return "MedicalEmergencyHelicopters -- SAJaS Repast3 Test";
-	}
+    public void setN(int N) {
+        this.N = N;
+    }
 
-	@Override
-	public void setup() {
-		super.setup();
+    public int getN_CONTRACTS() {
+        return N_CONTRACTS;
+    }
 
-		// property descriptors
-		// ...
-	}
+    public void setN_CONTRACTS(int N_CONTRACTS) {
+        this.N_CONTRACTS = N_CONTRACTS;
+    }
 
-	@Override
-	public void begin() {
-		super.begin();
+    @Override
+    public String[] getInitParam() {
+        return new String[0];
+    }
 
-		// display surfaces, spaces, displays, plots, ...
-		// ...
-	}
+    @Override
+    public String getName() {
+        return "MedicalEmergencyHelicopters -- SAJaS Repast3 Test";
+    }
 
-	@Override
-	protected void launchJADE() {
-		
-		Runtime rt = Runtime.instance();
-		Profile p1 = new ProfileImpl();
-		mainContainer = rt.createMainContainer(p1);
-		
-		if(SEPARATE_CONTAINERS) {
-			Profile hospitalProfile = new ProfileImpl();
-			hospitalProfile.setParameter(Profile.CONTAINER_NAME, "Hospitals");
-			hospitalContainer = rt.createAgentContainer(hospitalProfile);
-			Profile helicopterProfile = new ProfileImpl();
-			helicopterProfile.setParameter(Profile.CONTAINER_NAME, "Helicopters");
-			 helicopterContainer = rt.createAgentContainer(helicopterProfile);
-			Profile patientProfile = new ProfileImpl();
-			patientProfile.setParameter(Profile.CONTAINER_NAME, "Patients");
-			patientContainer = rt.createAgentContainer(patientProfile);
-		} else {
-			hospitalContainer = mainContainer;
-			helicopterContainer = mainContainer;
-			patientContainer = mainContainer;
-		}
-		
-		launchAgents();
-	}
-	
-	private void launchAgents() {
-		
-		int N_PATIENTS = N;
-		int N_HELICOPTERS = N*2/3;
-		int N_HOSPITALS = N/5;
-		
-		try {
-			AID resultsCollectorAID = null;
-			if(USE_RESULTS_COLLECTOR) {
-				// create results collector
-				ResultsCollector resultsCollector = new ResultsCollector(N_HELICOPTERS);
-				mainContainer.acceptNewAgent("ResultsCollector", resultsCollector).start();
-				resultsCollectorAID = resultsCollector.getAID();
-			}
+    @Override
+    public void setup() {
+        super.setup();
 
-			ScenarioReader.readScenario(hospitalContainer, helicopterContainer, patientContainer, this.jsonPath);
-			// create patients
-			/*for (int i = 0; i < N_PATIENTS; i++) {
-				PatientAgent pa = new PatientAgent();
-				patientContainer.acceptNewAgent("Patient" + i, pa).start();
-			}
+        // property descriptors
+        // ...
+    }
 
-			// create helicopters
-			for (int i = 0; i < N_HELICOPTERS; i++) {
-				HelicopterAgent ha = new HelicopterAgent();
-				helicopterContainer.acceptNewAgent("Helicopter" + i, ha).start();
-			}
+    @Override
+    public void begin() {
+        super.begin();
 
-			// create hospitals
-			for (int i = 0; i < N_HOSPITALS; i++) {
-				HospitalAgent ha = new HospitalAgent();
-				hospitalContainer.acceptNewAgent("Hospital" + i, ha).start();
-			}*/
+        // display surfaces, spaces, displays, plots, ...
+        // ...
+    }
 
+    @Override
+    protected void launchJADE() {
 
-		} catch (StaleProxyException e) {
-			e.printStackTrace();
-		}
-		
-	}
+        Runtime rt = Runtime.instance();
+        Profile p1 = new ProfileImpl();
+        p1.setParameter(Profile.GUI, "true");
+        mainContainer = rt.createMainContainer(p1);
 
-	/**
-	 * Launching Repast3
-	 * @param args
-	 */
-	public static void main(String[] args) {
+        if (SEPARATE_CONTAINERS) {
+            Profile hospitalProfile = new ProfileImpl();
+            hospitalProfile.setParameter(Profile.CONTAINER_NAME, "Hospitals");
+            hospitalContainer = rt.createAgentContainer(hospitalProfile);
+            Profile helicopterProfile = new ProfileImpl();
+            helicopterProfile.setParameter(Profile.CONTAINER_NAME, "Helicopters");
+            helicopterContainer = rt.createAgentContainer(helicopterProfile);
+            Profile patientProfile = new ProfileImpl();
+            patientProfile.setParameter(Profile.CONTAINER_NAME, "Patients");
+            patientContainer = rt.createAgentContainer(patientProfile);
+        } else {
+            hospitalContainer = mainContainer;
+            helicopterContainer = mainContainer;
+            patientContainer = mainContainer;
+        }
 
-      if (args.length != 2) {
-        System.out.println("Usage: java MedicalEmergencyHelicopters <json-file> [ <test> ]\n"
-            + "       json-file:  name of file (from test_files directory) containing helicopters, hospitals and patients\n"
-            + "       test:       FALSE (default) if logger should document execution, TRUE if testing only");
-        System.exit(1);
-      }
+        launchAgents();
+    }
 
-      String jsonPath = "test_files/" + args[0] + ".json";
-      Logger.init(Boolean.parseBoolean(args[1]));
+    private void launchAgents() {
 
-  		SimInit init = new SimInit();
-	  	init.setNumRuns(1);   // works only in batch mode
-		  init.loadModel(new MedicalEmergencyHelicoptersLauncher(jsonPath), null, true);
+        int N_PATIENTS = N;
+        int N_HELICOPTERS = N * 2 / 3;
+        int N_HOSPITALS = N / 5;
+
+        try {
+
+            AID resultsCollectorAID = null;
+            // create results collector
+            ResultsCollector resultsCollector = new ResultsCollector(N_HELICOPTERS);
+            mainContainer.acceptNewAgent("ResultsCollector", resultsCollector).start();
+            resultsCollectorAID = resultsCollector.getAID();
+            ScenarioReader.readScenario(
+                    hospitalContainer, helicopterContainer, patientContainer, this.jsonPath, resultsCollectorAID
+            );
+
+        } catch (StaleProxyException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Launching Repast3
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+
+        if (args.length != 2) {
+            System.out.println("Usage: java MedicalEmergencyHelicopters <json-file> [ <test> ]\n"
+                    + "       json-file:  name of file (from test_files directory) containing helicopters, hospitals and patients\n"
+                    + "       test:       FALSE (default) if logger should document execution, TRUE if testing only");
+            System.exit(1);
+        }
+
+        String jsonPath = "test_files/" + args[0] + ".json";
+        Logger.init(Boolean.parseBoolean(args[1]));
+
+        SimInit init = new SimInit();
+        init.setNumRuns(1);   // works only in batch mode
+        init.loadModel(new MedicalEmergencyHelicoptersLauncher(jsonPath), null, true);
 
     }
 

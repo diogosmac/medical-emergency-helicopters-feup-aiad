@@ -12,81 +12,94 @@ import java.util.Map;
 
 public class ResultsCollector extends Agent {
 
-	private static final long serialVersionUID = 1L;
-	
-	private int nResults;
-	
-	private long startTime = System.currentTimeMillis();
+    private static final long serialVersionUID = 1L;
 
-	//arrayList é um par onde guardamos: 1- date em que o paciente escolhe o helicopter"; 2- o tempo em que o paciente chega ao hospital. (helicopter finishes traveling behaviour)
-	private Map<AID, ArrayList<Long>> timeForPatient = new HashMap<>();
-	private Map<AID, Integer> treatmentQualityForPatient = new HashMap<>();
-	
-	public ResultsCollector(int nResults) {
-		this.nResults = nResults;
-	}
-	
-	@Override
-	public void setup() {
-		
-		//todo - stuff
+    private int nResults;
 
-		// results listener
-		addBehaviour(new ResultsListener());
-	}
-	
-	protected void printResults() {
-		long took = System.currentTimeMillis() - startTime;
-		System.out.println("Took: \t" + took);
+    private long startTime = System.currentTimeMillis();
 
-		//todo - actually print results
-	}
+    //arrayList é um par onde guardamos: 1- date em que o paciente escolhe o helicopter"; 2- o tempo em que o paciente chega ao hospital. (helicopter finishes traveling behaviour)
+    private final Map<AID, ArrayList<Long>> timeForPatient = new HashMap<>();
+    private final Map<AID, Integer> treatmentQualityForPatient = new HashMap<>();
 
-	
-	private class ResultsListener extends CyclicBehaviour {
+    public ResultsCollector(int nResults) {
+        this.nResults = nResults;
+    }
 
-		private static final long serialVersionUID = 1L;
+    @Override
+    public void setup() {
 
-		private MessageTemplate template = MessageTemplate.MatchPerformative((ACLMessage.INFORM));
+        //todo - stuff
 
-		@Override
-		public void action() {
+        // results listener
+        addBehaviour(new ResultsListener(this));
+    }
 
-			// ouvir todas as mensagens INFORM enviadas pelo paciente para o results collector -> para cada uma guardar no map o aid do paciente + o tempo autal
-			// ouvir todas as mensagens INFORM enviadas pelo helicoptero para o results collector
-			// 		-> para cada uma guardar no map, na entrada com o aid do paciente (que vem na mensagem) o tempo atual (no segundo elemento da lista)
-			//		-> para cada uma guardar no outro map, uma entrada com o aid do paciente e a qualidade do serviço do hospital (que vem na mensagem)
+    protected void printResults() {
+        long took = System.currentTimeMillis() - startTime;
+        System.out.println("Took: \t" + took);
 
+        //todo - actually print results
+    }
 
-			ACLMessage msg = myAgent.receive(template);
-			Object content = null;
+    private class ResultsListener extends CyclicBehaviour {
 
-			try {
-				content = msg.getContentObject();
-			} catch (UnreadableException e) {
-				e.printStackTrace();
-			}
+        private static final long serialVersionUID = 1L;
 
-			//mensagem do paciente
-			if (content instanceof String){
-				AID patient = msg.getSender();
+        private MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 
-				ArrayList<Long> times = new ArrayList<>();
-				times.add(System.currentTimeMillis());
-				timeForPatient.put(patient, times);
-			}
-			//mensagem do helicopter
-			else if (content instanceof PatientFinished){
-				PatientFinished patientFinished = (PatientFinished)content;
-				AID patient = patientFinished.getPatient();
-				Integer hospitalSuitability = patientFinished.getHospitalSuitability();
+        protected ResultsListener(Agent agent) {
+            super(agent);
+            myAgent = agent;
+        }
 
-				timeForPatient.get(patient).add(System.currentTimeMillis());
-				treatmentQualityForPatient.put(patient, hospitalSuitability);
-			}
+        @Override
+        public void action() {
 
-		}
-		
-	}
+            // ouvir todas as mensagens INFORM enviadas pelo paciente para o results collector -> para cada uma guardar no map o aid do paciente + o tempo autal
+            // ouvir todas as mensagens INFORM enviadas pelo helicoptero para o results collector
+            // 		-> para cada uma guardar no map, na entrada com o aid do paciente (que vem na mensagem) o tempo atual (no segundo elemento da lista)
+            //		-> para cada uma guardar no outro map, uma entrada com o aid do paciente e a qualidade do serviço do hospital (que vem na mensagem)
+
+            ACLMessage msg = myAgent.receive(template);
+
+            if (msg != null) {
+
+                Object content = null;
+                try {
+                    content = msg.getContentObject();
+                    System.out.println(content);
+                } catch (UnreadableException e) {
+                    e.printStackTrace();
+                }
+
+                // IDEIA: wrapper methods tipo handleMsgContent e que recebem o tipo específico do content
+                // ex:  handleMsgContent(String content)
+                //      handleMsgContent(PatientFinished content)
+                // e depois chamar só handleMsgContent(content), very clean
+
+                // mensagem do paciente
+                if (content instanceof String) {
+                    AID patient = msg.getSender();
+
+                    ArrayList<Long> times = new ArrayList<>();
+                    times.add(System.currentTimeMillis());
+                    timeForPatient.put(patient, times);
+                }
+                // mensagem do helicopter
+                else if (content instanceof PatientFinished) {
+                    PatientFinished patientFinished = (PatientFinished) content;
+                    AID patient = patientFinished.getPatient();
+                    Integer hospitalSuitability = patientFinished.getHospitalSuitability();
+
+                    timeForPatient.get(patient).add(System.currentTimeMillis());
+                    treatmentQualityForPatient.put(patient, hospitalSuitability);
+                }
+
+            }
+
+        }
+
+    }
 
 }
