@@ -6,6 +6,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import utils.Location;
 import utils.Logger;
+import utils.PatientInitiating;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -155,7 +156,7 @@ public class PatientNetInitiator extends ContractNetInitiator {
         //inform Results Collector
         ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
         try {
-            msg.setContentObject("Patient starting communication.");
+            msg.setContentObject(new PatientInitiating());
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

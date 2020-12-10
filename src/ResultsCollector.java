@@ -4,7 +4,9 @@ import sajas.core.Agent;
 import sajas.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import utils.PatientAccepted;
 import utils.PatientFinished;
+import utils.PatientInitiating;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +20,10 @@ public class ResultsCollector extends Agent {
 
     private long startTime = System.currentTimeMillis();
 
-    //arrayList é um par onde guardamos: 1- date em que o paciente escolhe o helicopter"; 2- o tempo em que o paciente chega ao hospital. (helicopter finishes traveling behaviour)
+    //arrayList é um par onde guardamos:
+    // 1- date em que o paciente escolhe o helicopter";
+    // 2- date em que o paciente é aceite por um helicopter
+    // 3- date em que o paciente chega ao hospital. (helicopter finishes traveling behaviour)
     private final Map<AID, ArrayList<Long>> timeForPatient = new HashMap<>();
     private final Map<AID, Integer> treatmentQualityForPatient = new HashMap<>();
 
@@ -79,14 +84,14 @@ public class ResultsCollector extends Agent {
                 // e depois chamar só handleMsgContent(content), very clean
 
                 // mensagem do paciente
-                if (content instanceof String) {
+                if (content instanceof PatientInitiating) {
                     AID patient = msg.getSender();
 
                     ArrayList<Long> times = new ArrayList<>();
                     times.add(System.currentTimeMillis());
                     timeForPatient.put(patient, times);
                 }
-                // mensagem do helicopter
+                // mensagem do helicopter quando deixa o paciente
                 else if (content instanceof PatientFinished) {
                     PatientFinished patientFinished = (PatientFinished) content;
                     AID patient = patientFinished.getPatient();
@@ -94,6 +99,13 @@ public class ResultsCollector extends Agent {
 
                     timeForPatient.get(patient).add(System.currentTimeMillis());
                     treatmentQualityForPatient.put(patient, hospitalSuitability);
+                }
+                // mensagem do helicopter quando aceita o paciente
+                else if (content instanceof PatientAccepted) {
+                    PatientAccepted patientAccepted= (PatientAccepted) content;
+                    AID patient = patientAccepted.getPatient();
+
+                    timeForPatient.get(patient).add(System.currentTimeMillis());
                 }
 
             }

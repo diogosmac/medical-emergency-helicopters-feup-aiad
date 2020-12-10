@@ -10,6 +10,8 @@ import jade.lang.acl.UnreadableException;
 import utils.Location;
 import utils.Logger;
 import injury.Injury;
+import utils.PatientAccepted;
+import utils.PatientFinished;
 
 import java.io.IOException;
 
@@ -99,6 +101,17 @@ public class HelicopterNetResponder extends ContractNetResponder {
 
             ACLMessage inform = accept.createReply();
             inform.setPerformative(ACLMessage.INFORM);
+
+            //inform Results Collector
+            ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+            try {
+                msg.setContentObject(new PatientAccepted(helicopter.getPatient()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            msg.addReceiver(helicopter.getResultsCollector());
+            helicopter.send(msg);
+
             return inform;
         }
         else {
