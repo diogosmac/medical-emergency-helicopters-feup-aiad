@@ -82,19 +82,39 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
     private DisplaySurface dsurf;
     private List<DefaultDrawableNode> nodes;
-    private int WIDTH = 500, HEIGHT = 500;
+    private int WIDTH = 0, HEIGHT = 0;
 
     private void buildNetworkModel() {
         nodes = new ArrayList<DefaultDrawableNode>();
         for (HospitalAgent hospital: ScenarioReader.getHospitalAgents()) {
             nodes.add(hospital.getNode());
+            if (hospital.getLocation().getX() * 10 >= WIDTH) {
+                WIDTH = (int) (hospital.getLocation().getX() * 11);
+            }
+            if (hospital.getLocation().getY() * 10 >= HEIGHT) {
+                HEIGHT = (int) (hospital.getLocation().getY() * 11);
+            }
         }
         for (HelicopterAgent helicopter: ScenarioReader.getHelicopterAgents()) {
             nodes.add(helicopter.getNode());
+            if (helicopter.getLocation().getX() * 10 >= WIDTH) {
+                WIDTH = (int) (helicopter.getLocation().getX() * 11);
+            }
+            if (helicopter.getLocation().getY() * 10 >= HEIGHT) {
+                HEIGHT = (int) (helicopter.getLocation().getY() * 11);
+            }
         }
         for (PatientAgent patient: ScenarioReader.getPatientAgents()) {
             nodes.add(patient.getNode());
+            if (patient.getPosition().getX() * 10 >= WIDTH) {
+                WIDTH = (int) (patient.getPosition().getX() * 11);
+            }
+            if (patient.getPosition().getY() * 10 >= HEIGHT) {
+                HEIGHT = (int) (patient.getPosition().getY() * 11);
+            }
         }
+        WIDTH += 50;
+        HEIGHT += 50;
     }
 
     private void displayNetworkModel() {
@@ -137,6 +157,7 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
         }
 
         launchAgents();
+
     }
 
     private void launchAgents() {
@@ -146,21 +167,19 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
         int N_HOSPITALS = N / 5;
 
         try {
-
-            AID resultsCollectorAID = null;
             // create results collector
             ResultsCollector resultsCollector = new ResultsCollector(N_HELICOPTERS);
             mainContainer.acceptNewAgent("ResultsCollector", resultsCollector).start();
-            resultsCollectorAID = resultsCollector.getAID();
+            AID resultsCollectorAID = resultsCollector.getAID();
             ScenarioReader.readScenario(
                     hospitalContainer, helicopterContainer, patientContainer, this.jsonPath, resultsCollectorAID
             );
-
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
 
         buildNetworkModel();
+
     }
 
 

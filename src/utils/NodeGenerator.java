@@ -29,7 +29,8 @@ public class NodeGenerator {
     }
 
     private static DefaultDrawableNode generatePatientNode(PatientAgent patient) {
-        OvalNetworkItem oval = new OvalNetworkItem(patient.getPosition().getX()*10, patient.getPosition().getY()*10);
+        OvalNetworkItem oval = new OvalNetworkItem(
+                patient.getPosition().getX()*10 + 50, patient.getPosition().getY()*10);
         oval.allowResizing(false);
         oval.setHeight(50);
         oval.setWidth(50);
@@ -43,7 +44,8 @@ public class NodeGenerator {
     }
 
     private static DefaultDrawableNode generateHelicopterNode(HelicopterAgent helicopter) {
-        RectNetworkItem rect = new RectNetworkItem(helicopter.getLocation().getX()*10, helicopter.getLocation().getY()*10);
+        RectNetworkItem rect = new RectNetworkItem(
+                helicopter.getLocation().getX()*10 + 50, helicopter.getLocation().getY()*10);
         rect.allowResizing(false);
         rect.setHeight(50);
         rect.setWidth(50);
@@ -57,7 +59,8 @@ public class NodeGenerator {
     }
 
     private static DefaultDrawableNode generateHospitalNode(HospitalAgent hospital) {
-        OvalNetworkItem oval = new OvalNetworkItem(hospital.getLocation().getX()*10, hospital.getLocation().getY()*10);
+        OvalNetworkItem oval = new OvalNetworkItem(
+                hospital.getLocation().getX()*10 + 50, hospital.getLocation().getY()*10);
         oval.allowResizing(false);
         oval.setHeight(50);
         oval.setWidth(50);
