@@ -10,6 +10,14 @@ public class Location implements java.io.Serializable {
         this.y = y;
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
     public double getDistance(Location that) {
         double deltaX = this.x - that.x;
         double deltaY = this.y - that.y;

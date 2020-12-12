@@ -1,8 +1,5 @@
 package utils;
 
-import jade.core.Profile;
-import jade.core.ProfileImpl;
-import jade.core.Runtime;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.core.AID;
@@ -24,6 +21,22 @@ public class ScenarioReader {
     private static int hospitalID = 1;
     private static int helicopterID = 1;
     private static int patientID = 1;
+
+    private static List<HospitalAgent> hospitalAgents;
+    private static List<HelicopterAgent> helicopterAgents;
+    private static List<PatientAgent> patientAgents;
+
+    public static List<HospitalAgent> getHospitalAgents() {
+        return hospitalAgents;
+    }
+
+    public static List<HelicopterAgent> getHelicopterAgents() {
+        return helicopterAgents;
+    }
+
+    public static List<PatientAgent> getPatientAgents() {
+        return patientAgents;
+    }
 
     public static void readScenario(AgentContainer hospitalContainer, AgentContainer helicopterContainer,
                                     AgentContainer patientContainer, String filename) throws StaleProxyException {
@@ -53,11 +66,14 @@ public class ScenarioReader {
             e.printStackTrace();
             return;
         }
-        readHospitals(hospitalContainer, obj);
+        hospitalAgents = readHospitals(hospitalContainer, obj);
 
-        readHelicopters(helicopterContainer, obj, resultsCollectorAID);
+        helicopterAgents = readHelicopters(helicopterContainer, obj, resultsCollectorAID);
 
-        readPatients(patientContainer, obj, resultsCollectorAID);
+        patientAgents = readPatients(patientContainer, obj, resultsCollectorAID);
+
+        NodeGenerator.generateNodes(hospitalAgents, helicopterAgents, patientAgents);
+        EdgeGenerator.generateEdges(hospitalAgents, helicopterAgents, patientAgents);
     }
 
     private static void readHospitals(AgentContainer container, JSONObject obj) throws StaleProxyException {
@@ -94,7 +110,8 @@ public class ScenarioReader {
         }
     }
 
-    private static void readHospitals(ContainerController container, JSONObject obj) throws StaleProxyException {
+    private static List<HospitalAgent> readHospitals(ContainerController container, JSONObject obj) throws StaleProxyException {
+        List<HospitalAgent> hospitalAgents = new ArrayList<>();
         JSONArray hospitals = (JSONArray) obj.get("hospitals");
         int index = 0;
         for (Object o : hospitals) {
@@ -121,8 +138,10 @@ public class ScenarioReader {
             }
             String[] args = argList.toArray(String[]::new);
             HospitalAgent hos = new HospitalAgent(args);
+            hospitalAgents.add(hos);
             container.acceptNewAgent("Hospital" + index++, hos).start();
         }
+        return hospitalAgents;
     }
 
     private static void readHelicopters(AgentContainer container, JSONObject obj) throws StaleProxyException {
@@ -148,8 +167,9 @@ public class ScenarioReader {
         }
     }
 
-    private static void readHelicopters(
+    private static List<HelicopterAgent> readHelicopters(
             ContainerController container, JSONObject obj, AID resultsCollectorAID) throws StaleProxyException {
+        List<HelicopterAgent> helicopterAgents = new ArrayList<>();
         JSONArray helicopters = (JSONArray) obj.get("helicopters");
         int index = 0;
         for (Object o : helicopters) {
@@ -165,9 +185,11 @@ public class ScenarioReader {
                 args = new String[]{ x, y, radius, speed };
             } else args = new String[]{ x, y, radius };
             HelicopterAgent hel = new HelicopterAgent(args);
+            helicopterAgents.add(hel);
             hel.setResultsCollector(resultsCollectorAID);
             container.acceptNewAgent("Helicopter" + index++, hel).start();
         }
+        return helicopterAgents;
     }
 
     private static void readPatients(AgentContainer container, JSONObject obj) throws StaleProxyException{
@@ -195,8 +217,9 @@ public class ScenarioReader {
         }
     }
 
-    private static void readPatients(
+    private static List<PatientAgent> readPatients(
             ContainerController container, JSONObject obj, AID resultsCollectorAID) throws StaleProxyException{
+        List<PatientAgent> patientAgents = new ArrayList<>();
         JSONArray patients = (JSONArray) obj.get("patients");
         int index = 0;
         for (Object o : patients) {
@@ -214,9 +237,11 @@ public class ScenarioReader {
                 args = new String[]{x, y, injuryType, injurySeverity, waitPeriod};
             } else args = new String[]{x, y, injuryType, injurySeverity};
             PatientAgent pat = new PatientAgent(args);
+            patientAgents.add(pat);
             pat.setResultsCollector(resultsCollectorAID);
             container.acceptNewAgent("Patient" + index++, pat).start();
         }
+        return patientAgents;
     }
 
 }

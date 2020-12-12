@@ -7,10 +7,12 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import uchicago.src.sim.network.DefaultDrawableNode;
 import utils.AgentType;
 import utils.Location;
 import utils.Logger;
 import injury.InjuryType;
+import utils.NodeGenerator;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -21,11 +23,15 @@ public class HospitalAgent extends Agent {
     private int numberOfPatients;
     private int capacity;
     private EnumMap<InjuryType, Integer> levelOfCompetence;
+    private DefaultDrawableNode node;
 
     public HospitalAgent() {}
 
     public HospitalAgent(Object[] args) {
         this.setArguments(args);
+        String[] argsString = Arrays.copyOf(args, args.length, String[].class);
+        String x = argsString[0], y = argsString[1];
+        this.location = new Location(Integer.parseInt(x), Integer.parseInt(y));
     }
 
     public Location getLocation() {
@@ -40,6 +46,14 @@ public class HospitalAgent extends Agent {
         if (!levelOfCompetence.containsKey(injuryType))
             return 0;
         return levelOfCompetence.get(injuryType);
+    }
+
+    public DefaultDrawableNode getNode() {
+        return node;
+    }
+
+    public void setNode(DefaultDrawableNode node) {
+        this.node = node;
     }
 
     public void setup() {

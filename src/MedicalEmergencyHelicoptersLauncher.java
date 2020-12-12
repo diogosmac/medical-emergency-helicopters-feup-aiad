@@ -9,8 +9,14 @@ import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
 import uchicago.src.sim.engine.SimInit;
 import jade.wrapper.StaleProxyException;
+import uchicago.src.sim.gui.DisplaySurface;
+import uchicago.src.sim.gui.Network2DDisplay;
+import uchicago.src.sim.network.DefaultDrawableNode;
 import utils.Logger;
 import utils.ScenarioReader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
@@ -70,6 +76,40 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
         // display surfaces, spaces, displays, plots, ...
         // ...
+
+        displayNetworkModel();
+    }
+
+    private DisplaySurface dsurf;
+    private List<DefaultDrawableNode> nodes;
+    private int WIDTH = 500, HEIGHT = 500;
+
+    private void buildNetworkModel() {
+        nodes = new ArrayList<DefaultDrawableNode>();
+        for (HospitalAgent hospital: ScenarioReader.getHospitalAgents()) {
+            nodes.add(hospital.getNode());
+        }
+        for (HelicopterAgent helicopter: ScenarioReader.getHelicopterAgents()) {
+            nodes.add(helicopter.getNode());
+        }
+        for (PatientAgent patient: ScenarioReader.getPatientAgents()) {
+            nodes.add(patient.getNode());
+        }
+    }
+
+    private void displayNetworkModel() {
+        if (dsurf != null) {
+            dsurf.dispose();
+        }
+
+        dsurf = new DisplaySurface(this, "Service Consumer/Provider Display");
+        registerDisplaySurface("Service Consumer/Provider Display", dsurf);
+        Network2DDisplay display = new Network2DDisplay(nodes,WIDTH,HEIGHT);
+        dsurf.addDisplayableProbeable(display, "Network Display");
+        dsurf.addZoomable(display);
+        addSimEventListener(dsurf);
+        dsurf.display();
+
     }
 
     @Override
@@ -120,7 +160,10 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
             e.printStackTrace();
         }
 
+        buildNetworkModel();
     }
+
+
 
     /**
      * Launching Repast3

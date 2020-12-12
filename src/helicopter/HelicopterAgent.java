@@ -7,6 +7,7 @@ import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import uchicago.src.sim.network.DefaultDrawableNode;
 import utils.Logger;
 import utils.AgentType;
 import utils.Location;
@@ -27,11 +28,15 @@ public class HelicopterAgent extends Agent {
     private boolean busy;
     private double speed = 1;
     private AID resultsCollector;
+    private DefaultDrawableNode node;
 
     public HelicopterAgent() {}
 
     public HelicopterAgent(Object[] args) {
         this.setArguments(args);
+        String[] argsString = Arrays.copyOf(args, args.length, String[].class);
+        String x = argsString[0], y = argsString[1];
+        this.location = new Location(Integer.parseInt(x), Integer.parseInt(y));
     }
 
     public Location getLocation() {
@@ -69,6 +74,14 @@ public class HelicopterAgent extends Agent {
     public AID getPatient() { return patient; }
 
     public void setPatient(AID patient) { this.patient = patient; }
+
+    public DefaultDrawableNode getNode() {
+        return node;
+    }
+
+    public void setNode(DefaultDrawableNode node) {
+        this.node = node;
+    }
 
     public void setup() {
 

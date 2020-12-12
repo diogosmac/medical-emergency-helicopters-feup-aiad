@@ -7,11 +7,13 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import uchicago.src.sim.network.DefaultDrawableNode;
 import utils.AgentType;
 import utils.Location;
 import utils.Logger;
 import injury.Injury;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -23,11 +25,16 @@ public class PatientAgent extends Agent {
     private ArrayList<AID> responders = new ArrayList<>();
     private int numberOfResponders;
     private AID resultsCollector = null;
+    private DefaultDrawableNode node;
 
     public PatientAgent() {}
 
     public PatientAgent(Object[] args) {
         this.setArguments(args);
+
+        String[] argsString = Arrays.copyOf(args, args.length, String[].class);
+        String x = argsString[0], y = argsString[1];
+        this.position = new Location(Integer.parseInt(x), Integer.parseInt(y));
     }
 
     public Injury getInjury() { return injury; }
@@ -47,6 +54,14 @@ public class PatientAgent extends Agent {
     public AID getResultsCollector(){ return resultsCollector; }
 
     public void setResultsCollector(AID resultsCollector){ this.resultsCollector = resultsCollector; }
+
+    public DefaultDrawableNode getNode() {
+        return node;
+    }
+
+    public void setNode(DefaultDrawableNode node) {
+        this.node = node;
+    }
 
     public void setup() {
 
