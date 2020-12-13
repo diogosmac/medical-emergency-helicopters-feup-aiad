@@ -193,6 +193,7 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
     OpenSequenceGraph totalTreatedGraph;
     OpenSequenceGraph treatmentTimeGraph;
+    OpenSequenceGraph treatmentQualityGraph;
 
     private void buildCharts() {
         // Patients vs Treated Patients
@@ -246,6 +247,28 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
         });
 
         // Average Treatment Quality
+        treatmentQualityGraph = new OpenSequenceGraph("Average Treatment Quality", this);
+
+        treatmentQualityGraph.setXRange(0, 2);
+        treatmentQualityGraph.setYRange(0, 20);
+        treatmentQualityGraph.setAxisTitles("time", "");
+
+        treatmentQualityGraph.addSequence("Treatment Quality", new Sequence() {
+            public double getSValue() {
+                int sum = 0;
+                int treatedPatients = 0;
+                for (Map.Entry<AID, Integer> entry : resultsCollector.getTreatmentQualityForPatient().entrySet()) {
+                    sum += entry.getValue();
+                    treatedPatients++;
+                }
+                if (resultsCollector.getTreatmentQualityForPatient().size() == 0) {
+                    return 0;
+                }
+
+                return (double) sum / (double) treatedPatients;
+            }
+        });
+
     }
 
     private void displayCharts() {
@@ -254,6 +277,9 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
         treatmentTimeGraph.display();
         getSchedule().scheduleActionAtInterval(1, treatmentTimeGraph, "step", Schedule.LAST);
+
+        treatmentQualityGraph.display();
+        getSchedule().scheduleActionAtInterval(1, treatmentQualityGraph, "step", Schedule.LAST);
     }
 
     @Override

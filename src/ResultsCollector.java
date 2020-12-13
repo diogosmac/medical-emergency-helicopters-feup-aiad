@@ -105,9 +105,6 @@ public class ResultsCollector extends Agent {
                     PatientFinished patientFinished = (PatientFinished) content;
                     AID patient = patientFinished.getPatient();
                     Integer hospitalSuitability = patientFinished.getHospitalSuitability();
-                    /*System.out.println("FINNISH");
-                    System.out.println(patient);
-                    System.out.println(timeForPatient.get(patient));*/
 
                     timeForPatient.get(patient).add(System.currentTimeMillis());
                     treatmentQualityForPatient.put(patient, hospitalSuitability);
