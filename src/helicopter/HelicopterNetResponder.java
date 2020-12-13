@@ -27,7 +27,6 @@ public class HelicopterNetResponder extends ContractNetResponder {
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
         Location patientLocation;
-        helicopter.setPatient(cfp.getSender());
 
         try {
             patientLocation = (Location) cfp.getContentObject();
@@ -75,6 +74,9 @@ public class HelicopterNetResponder extends ContractNetResponder {
     @Override
     protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose,ACLMessage accept) throws FailureException {
         String logMessage;
+
+        helicopter.setPatient(cfp.getSender());
+
         try {
             logMessage = helicopter.getLocalName() + ": " +
                     "accepted proposal [ " + propose.getContentObject() + " ] " +

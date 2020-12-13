@@ -22,9 +22,9 @@ public class ScenarioReader {
     private static int helicopterID = 1;
     private static int patientID = 1;
 
-    private static List<HospitalAgent> hospitalAgents;
-    private static List<HelicopterAgent> helicopterAgents;
-    private static List<PatientAgent> patientAgents;
+    private static List<HospitalAgent> hospitalAgents = new ArrayList<>();;
+    private static List<HelicopterAgent> helicopterAgents = new ArrayList<>();;
+    private static List<PatientAgent> patientAgents = new ArrayList<>();;
 
     public static List<HospitalAgent> getHospitalAgents() {
         return hospitalAgents;

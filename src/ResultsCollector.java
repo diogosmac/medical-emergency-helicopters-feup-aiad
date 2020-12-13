@@ -32,6 +32,14 @@ public class ResultsCollector extends Agent {
 //    }
     public ResultsCollector() {}
 
+    public Map<AID, ArrayList<Long>> getTimeForPatient() {
+        return timeForPatient;
+    }
+
+    public Map<AID, Integer> getTreatmentQualityForPatient() {
+        return treatmentQualityForPatient;
+    }
+
     @Override
     public void setup() {
 
@@ -97,6 +105,9 @@ public class ResultsCollector extends Agent {
                     PatientFinished patientFinished = (PatientFinished) content;
                     AID patient = patientFinished.getPatient();
                     Integer hospitalSuitability = patientFinished.getHospitalSuitability();
+                    /*System.out.println("FINNISH");
+                    System.out.println(patient);
+                    System.out.println(timeForPatient.get(patient));*/
 
                     timeForPatient.get(patient).add(System.currentTimeMillis());
                     treatmentQualityForPatient.put(patient, hospitalSuitability);
@@ -105,7 +116,9 @@ public class ResultsCollector extends Agent {
                 else if (content instanceof PatientAccepted) {
                     PatientAccepted patientAccepted= (PatientAccepted) content;
                     AID patient = patientAccepted.getPatient();
-
+                    /*System.out.println("ACCEPTED");
+                    System.out.println(patient);
+                    System.out.println(timeForPatient.get(patient));*/
                     timeForPatient.get(patient).add(System.currentTimeMillis());
                 }
 

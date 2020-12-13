@@ -7,6 +7,9 @@ import jade.core.ProfileImpl;
 import sajas.core.Runtime;
 import sajas.sim.repast3.Repast3Launcher;
 import sajas.wrapper.ContainerController;
+import uchicago.src.sim.analysis.OpenSequenceGraph;
+import uchicago.src.sim.analysis.Sequence;
+import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import jade.wrapper.StaleProxyException;
 import uchicago.src.sim.gui.DisplaySurface;
@@ -19,6 +22,7 @@ import utils.ScenarioReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Map;
 
 public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
@@ -31,6 +35,7 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
     private ContainerController hospitalContainer;
     private ContainerController helicopterContainer;
     private ContainerController patientContainer;
+    private ResultsCollector resultsCollector;
 
     private int mapWidth;
     private int mapLength;
@@ -127,7 +132,7 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
         // display surfaces, spaces, displays, plots, ...
         // ...
         displayNetworkModel();
-
+        displayCharts();
     }
 
     private DisplaySurface dsurf;
@@ -186,6 +191,69 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
     }
 
+    OpenSequenceGraph totalTreatedGraph;
+    OpenSequenceGraph treatmentTimeGraph;
+
+    private void buildCharts() {
+        // Patients vs Treated Patients
+        totalTreatedGraph = new OpenSequenceGraph("Patients vs Treated Patients", this);
+
+        totalTreatedGraph.setXRange(0, 2);
+        totalTreatedGraph.setYRange(0, 20);
+        totalTreatedGraph.setAxisTitles("time", "Quantity");
+
+        totalTreatedGraph.addSequence("Total Patients", new Sequence() {
+            public double getSValue() {
+                return resultsCollector.getTimeForPatient().size();
+            }
+        });
+
+        totalTreatedGraph.addSequence("Treated Patients", new Sequence() {
+            public double getSValue() {
+                int treatedPatients = 0;
+                for (Map.Entry<AID, ArrayList<Long>> entry : resultsCollector.getTimeForPatient().entrySet()) {
+                    if (entry.getValue().size() == 3) {
+                        treatedPatients++;
+                    }
+                }
+                return treatedPatients;
+            }
+        });
+
+        // Average Treatment Time
+        treatmentTimeGraph = new OpenSequenceGraph("Average Treatment Time", this);
+
+        treatmentTimeGraph.setXRange(0, 2);
+        treatmentTimeGraph.setYRange(0, 20);
+        treatmentTimeGraph.setAxisTitles("time", "");
+
+        treatmentTimeGraph.addSequence("Treatment Time", new Sequence() {
+            public double getSValue() {
+                int sum = 0;
+                int treatedPatients = 0;
+                for (Map.Entry<AID, ArrayList<Long>> entry : resultsCollector.getTimeForPatient().entrySet()) {
+                    if (entry.getValue().size() == 3) {
+                        sum += (entry.getValue().get(2) - entry.getValue().get(0)) / 1000;
+                        treatedPatients++;
+                    }
+                }
+                if (resultsCollector.getTimeForPatient().size() == 0) {
+                    return 0;
+                }
+
+                return (double) sum / (double) treatedPatients;
+            }
+        });
+    }
+
+    private void displayCharts() {
+        totalTreatedGraph.display();
+        getSchedule().scheduleActionAtInterval(1, totalTreatedGraph, "step", Schedule.LAST);
+
+        treatmentTimeGraph.display();
+        getSchedule().scheduleActionAtInterval(1, treatmentTimeGraph, "step", Schedule.LAST);
+    }
+
     @Override
     protected void launchJADE() {
 
@@ -222,8 +290,7 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
         try {
             // create results collector
-//            ResultsCollector resultsCollector = new ResultsCollector(N_HELICOPTERS);
-            ResultsCollector resultsCollector = new ResultsCollector();
+            resultsCollector = new ResultsCollector();
             mainContainer.acceptNewAgent("ResultsCollector", resultsCollector).start();
             AID resultsCollectorAID = resultsCollector.getAID();
             ScenarioBuilder.buildScenario(
@@ -246,7 +313,7 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
         }
 
         buildNetworkModel();
-
+        buildCharts();
     }
 
 
