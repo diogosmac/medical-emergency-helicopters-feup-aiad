@@ -79,9 +79,9 @@ public class ScenarioBuilder {
                     random.nextInt(mapWidth));
             String y = Integer.toString(
                     random.nextInt(mapLength));
-            int hosCapacity = random.nextInt(maxHospitalCapacity - minHospitalCapacity) + maxHospitalCapacity;
+            int hosCapacity = random.nextInt(maxHospitalCapacity - minHospitalCapacity + 1) + maxHospitalCapacity;
             int hosPatients = (
-                    random.nextInt(maxHospitalOccupancy - minHospitalOccupancy) + maxHospitalOccupancy)
+                    random.nextInt(maxHospitalOccupancy - minHospitalOccupancy + 1) + maxHospitalOccupancy)
                     * hosCapacity
                     / 100;
             String patients = Integer.toString(hosPatients);
@@ -124,9 +124,9 @@ public class ScenarioBuilder {
             String y = Integer.toString(
                     random.nextInt(mapLength));
             String radius = Integer.toString(
-                    random.nextInt(maxHelicopterRange - minHelicopterRange) + minHelicopterRange);
+                    random.nextInt(maxHelicopterRange - minHelicopterRange + 1) + minHelicopterRange);
             String speed = Integer.toString(
-                    random.nextInt(maxHelicopterSpeed - minHelicopterSpeed) + minHelicopterSpeed);
+                    random.nextInt(maxHelicopterSpeed - minHelicopterSpeed + 1) + minHelicopterSpeed);
 
             List<String> argList = new ArrayList<>();
             argList.add(x);
@@ -164,9 +164,9 @@ public class ScenarioBuilder {
             InjuryType[] vals = InjuryType.values();
             String type = vals[random.nextInt(vals.length)].toString();
             String severity = Integer.toString(
-                    random.nextInt(maxPatientSeverity - minPatientSeverity) + minPatientSeverity);
+                    random.nextInt(maxPatientSeverity - minPatientSeverity + 1) + minPatientSeverity);
             String delay = Integer.toString(
-                    random.nextInt(maxPatientDelay - minPatientDelay) + minPatientDelay);
+                    random.nextInt(maxPatientDelay - minPatientDelay + 1) + minPatientDelay);
 
             List<String> argList = new ArrayList<>();
             argList.add(x);
