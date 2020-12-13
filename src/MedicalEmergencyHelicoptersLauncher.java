@@ -52,6 +52,8 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
     private int maxHelicopterRange;
     private int minHelicopterSpeed;
     private int maxHelicopterSpeed;
+    private int minPatientDelay;
+    private int maxPatientDelay;
 
 //    private final String jsonPath;
 
@@ -93,7 +95,9 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
             "minHelicopterRange",
             "maxHelicopterRange",
             "minHelicopterSpeed",
-            "maxHelicopterSpeed"
+            "maxHelicopterSpeed",
+            "minPatientDelay",
+            "maxPatientDelay"
         };
     }
 
@@ -121,6 +125,8 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
         setMaxHelicopterRange(random.nextInt(100 - minHelicopterRange) + minHelicopterRange);
         setMinHelicopterSpeed(random.nextInt(15));
         setMaxHelicopterSpeed(random.nextInt(50 - minHelicopterSpeed) + minHelicopterSpeed);
+        setMinPatientDelay(0);
+        setMaxPatientDelay(random.nextInt(20 - minPatientDelay) + minPatientDelay);
 
     }
 
@@ -331,7 +337,8 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
                     minHospitalOccupancy, maxHospitalOccupancy,
                     minPatientSeverity, maxPatientSeverity,
                     minHelicopterRange, maxHelicopterRange,
-                    minHelicopterSpeed, maxHelicopterSpeed
+                    minHelicopterSpeed, maxHelicopterSpeed,
+                    minPatientDelay, maxPatientDelay
             );
 //            ScenarioReader.readScenario(
 //                    hospitalContainer, helicopterContainer, patientContainer, this.jsonPath, resultsCollectorAID
@@ -406,5 +413,9 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
     public int getMinHelicopterSpeed() { return this.minHelicopterSpeed; }
     public void setMaxHelicopterSpeed(int maxHelicopterSpeed) { this.maxHelicopterSpeed = maxHelicopterSpeed; }
     public int getMaxHelicopterSpeed() { return this.maxHelicopterSpeed; }
+    public void setMinPatientDelay(int minPatientDelay) { this.minPatientDelay = minPatientDelay; }
+    public int getMinPatientDelay() { return this.minPatientDelay; }
+    public void setMaxPatientDelay(int maxPatientDelay) { this.maxPatientDelay = maxPatientDelay; }
+    public int getMaxPatientDelay() { return this.maxPatientDelay; }
 
-}
+  }
