@@ -16,9 +16,9 @@ public class ResultsCollector extends Agent {
 
     private static final long serialVersionUID = 1L;
 
-    private int nResults;
+//    private int nResults;
 
-    private long startTime = System.currentTimeMillis();
+    private final long startTime = System.currentTimeMillis();
 
     //arrayList é um par onde guardamos:
     // 1- date em que o paciente escolhe o helicopter";
@@ -27,9 +27,10 @@ public class ResultsCollector extends Agent {
     private final Map<AID, ArrayList<Long>> timeForPatient = new HashMap<>();
     private final Map<AID, Integer> treatmentQualityForPatient = new HashMap<>();
 
-    public ResultsCollector(int nResults) {
-        this.nResults = nResults;
-    }
+//    public ResultsCollector(int nResults) {
+//        this.nResults = nResults;
+//    }
+    public ResultsCollector() {}
 
     @Override
     public void setup() {

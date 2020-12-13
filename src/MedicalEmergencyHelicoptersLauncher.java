@@ -13,6 +13,7 @@ import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.Network2DDisplay;
 import uchicago.src.sim.network.DefaultDrawableNode;
 import utils.Logger;
+import utils.ScenarioBuilder;
 import utils.ScenarioReader;
 
 import java.util.ArrayList;
@@ -36,6 +37,10 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
     private int numPatients;
     private int numHelicopters;
     private int numHospitals;
+    private int minHospitalCapacity;
+    private int maxHospitalCapacity;
+    private int minHospitalOccupancy;
+    private int maxHospitalOccupancy;
     private int minPatientSeverity;
     private int maxPatientSeverity;
     private int minHelicopterRange;
@@ -43,11 +48,12 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
     private int minHelicopterSpeed;
     private int maxHelicopterSpeed;
 
-    private final String jsonPath;
+//    private final String jsonPath;
 
-    public MedicalEmergencyHelicoptersLauncher(String jsonPath) {
-        this.jsonPath = jsonPath;
-    }
+//    public MedicalEmergencyHelicoptersLauncher(String jsonPath) {
+//        this.jsonPath = jsonPath;
+//    }
+    public MedicalEmergencyHelicoptersLauncher() {}
 
     public int getN() {
         return N;
@@ -68,9 +74,15 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
     @Override
     public String[] getInitParam() {
         return new String[]{
+            "mapWidth",
+            "mapLength",
             "numPatients",
             "numHelicopters",
             "numHospitals",
+            "minHospitalCapacity",
+            "maxHospitalCapacity",
+            "minHospitalOccupancy",
+            "maxHospitalOccupancy",
             "minPatientSeverity",
             "maxPatientSeverity",
             "minHelicopterRange",
@@ -81,86 +93,92 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
     }
 
     @Override
-    public String getName() {
-        return "MedicalEmergencyHelicopters -- SAJaS Repast3 Test";
-    }
+    public String getName() { return "MedicalEmergencyHelicopters -- SAJaS Repast3 Test"; }
 
     @Override
     public void setup() {
+
         super.setup();
 
-        // property descriptors
-        // ...
         Random random = new Random(this.getRngSeed());
         setMapWidth(100);
         setMapLength(100);
         setNumPatients(random.nextInt(50));
         setNumHelicopters(random.nextInt(15));
         setNumHospitals(5);
+        setMinHospitalCapacity(random.nextInt(numPatients / 2));
+        setMaxHospitalCapacity(random.nextInt(numPatients - minHospitalCapacity) + minHospitalCapacity);
+        setMinHospitalOccupancy(random.nextInt(50));
+        setMaxHospitalOccupancy(random.nextInt(100 - minHospitalOccupancy) + minHospitalOccupancy);
         setMinPatientSeverity(random.nextInt(50));
-        setMaxPatientSeverity(random.nextInt() % (100 - getMinPatientSeverity()) + getMinPatientSeverity());
+        setMaxPatientSeverity(random.nextInt(100 - minPatientSeverity) + minPatientSeverity);
         setMinHelicopterRange(random.nextInt(100));
-        setMaxHelicopterRange(random.nextInt() % (100 - getMinHelicopterRange()) + getMinHelicopterRange());
+        setMaxHelicopterRange(random.nextInt(100 - minHelicopterRange) + minHelicopterRange);
         setMinHelicopterSpeed(random.nextInt(15));
-        setMaxHelicopterSpeed(random.nextInt() % (50 - getMinHelicopterSpeed()) + getMinHelicopterSpeed());
+        setMaxHelicopterSpeed(random.nextInt(50 - minHelicopterSpeed) + minHelicopterSpeed);
 
     }
 
     @Override
     public void begin() {
+
         super.begin();
 
         // display surfaces, spaces, displays, plots, ...
         // ...
-
         displayNetworkModel();
+
     }
 
     private DisplaySurface dsurf;
     private List<DefaultDrawableNode> nodes;
-    private int WIDTH = 0, HEIGHT = 0;
+//    private int WIDTH = 0, HEIGHT = 0;
 
     private void buildNetworkModel() {
-        nodes = new ArrayList<DefaultDrawableNode>();
-        for (HospitalAgent hospital: ScenarioReader.getHospitalAgents()) {
+        nodes = new ArrayList<>();
+        for (HospitalAgent hospital: ScenarioBuilder.getHospitalAgents()) {
+//        for (HospitalAgent hospital: ScenarioReader.getHospitalAgents()) {
             nodes.add(hospital.getNode());
-            if (hospital.getLocation().getX() * 10 >= WIDTH) {
-                WIDTH = (int) (hospital.getLocation().getX() * 11);
-            }
-            if (hospital.getLocation().getY() * 10 >= HEIGHT) {
-                HEIGHT = (int) (hospital.getLocation().getY() * 11);
-            }
+//            if (hospital.getLocation().getX() * 10 >= WIDTH) {
+//                WIDTH = (int) (hospital.getLocation().getX() * 11);
+//            }
+//            if (hospital.getLocation().getY() * 10 >= HEIGHT) {
+//                HEIGHT = (int) (hospital.getLocation().getY() * 11);
+//            }
         }
-        for (HelicopterAgent helicopter: ScenarioReader.getHelicopterAgents()) {
+        for (HelicopterAgent helicopter: ScenarioBuilder.getHelicopterAgents()) {
+//        for (HelicopterAgent helicopter: ScenarioReader.getHelicopterAgents()) {
             nodes.add(helicopter.getNode());
-            if (helicopter.getLocation().getX() * 10 >= WIDTH) {
-                WIDTH = (int) (helicopter.getLocation().getX() * 11);
-            }
-            if (helicopter.getLocation().getY() * 10 >= HEIGHT) {
-                HEIGHT = (int) (helicopter.getLocation().getY() * 11);
-            }
+//            if (helicopter.getLocation().getX() * 10 >= WIDTH) {
+//                WIDTH = (int) (helicopter.getLocation().getX() * 11);
+//            }
+//            if (helicopter.getLocation().getY() * 10 >= HEIGHT) {
+//                HEIGHT = (int) (helicopter.getLocation().getY() * 11);
+//            }
         }
-        for (PatientAgent patient: ScenarioReader.getPatientAgents()) {
+        for (PatientAgent patient: ScenarioBuilder.getPatientAgents()) {
+//        for (PatientAgent patient: ScenarioReader.getPatientAgents()) {
             nodes.add(patient.getNode());
-            if (patient.getPosition().getX() * 10 >= WIDTH) {
-                WIDTH = (int) (patient.getPosition().getX() * 11);
-            }
-            if (patient.getPosition().getY() * 10 >= HEIGHT) {
-                HEIGHT = (int) (patient.getPosition().getY() * 11);
-            }
+//            if (patient.getPosition().getX() * 10 >= WIDTH) {
+//                WIDTH = (int) (patient.getPosition().getX() * 11);
+//            }
+//            if (patient.getPosition().getY() * 10 >= HEIGHT) {
+//                HEIGHT = (int) (patient.getPosition().getY() * 11);
+//            }
         }
-        WIDTH += 50;
-        HEIGHT += 50;
+//        WIDTH += 50;
+//        HEIGHT += 50;
     }
 
     private void displayNetworkModel() {
+
         if (dsurf != null) {
             dsurf.dispose();
         }
 
         dsurf = new DisplaySurface(this, "Service Consumer/Provider Display");
         registerDisplaySurface("Service Consumer/Provider Display", dsurf);
-        Network2DDisplay display = new Network2DDisplay(nodes,WIDTH,HEIGHT);
+        Network2DDisplay display = new Network2DDisplay(nodes, mapWidth * 10 + 100, mapLength * 10 + 100);
         dsurf.addDisplayableProbeable(display, "Network Display");
         dsurf.addZoomable(display);
         addSimEventListener(dsurf);
@@ -204,12 +222,25 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
         try {
             // create results collector
-            ResultsCollector resultsCollector = new ResultsCollector(N_HELICOPTERS);
+//            ResultsCollector resultsCollector = new ResultsCollector(N_HELICOPTERS);
+            ResultsCollector resultsCollector = new ResultsCollector();
             mainContainer.acceptNewAgent("ResultsCollector", resultsCollector).start();
             AID resultsCollectorAID = resultsCollector.getAID();
-            ScenarioReader.readScenario(
-                    hospitalContainer, helicopterContainer, patientContainer, this.jsonPath, resultsCollectorAID
+            ScenarioBuilder.buildScenario(
+                    hospitalContainer, numHospitals,
+                    helicopterContainer, numHelicopters,
+                    patientContainer, numPatients,
+                    resultsCollectorAID,
+                    mapWidth, mapLength,
+                    minHospitalCapacity, maxHospitalCapacity,
+                    minHospitalOccupancy, maxHospitalOccupancy,
+                    minPatientSeverity, maxPatientSeverity,
+                    minHelicopterRange, maxHelicopterRange,
+                    minHelicopterSpeed, maxHelicopterSpeed
             );
+//            ScenarioReader.readScenario(
+//                    hospitalContainer, helicopterContainer, patientContainer, this.jsonPath, resultsCollectorAID
+//            );
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
@@ -227,108 +258,58 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
      */
     public static void main(String[] args) {
 
-        if (args.length != 2) {
+//        if (args.length != 2) {
+//            System.out.println("Usage: java MedicalEmergencyHelicopters <json-file> [ <test> ]\n"
+//                    + "       json-file:  name of file (from test_files directory) containing helicopters, hospitals and patients\n"
+//                    + "       test:       FALSE (default) if logger should document execution, TRUE if testing only");
+//            System.exit(1);
+//        }
+        if (args.length != 1) {
             System.out.println("Usage: java MedicalEmergencyHelicopters <json-file> [ <test> ]\n"
-                    + "       json-file:  name of file (from test_files directory) containing helicopters, hospitals and patients\n"
                     + "       test:       FALSE (default) if logger should document execution, TRUE if testing only");
             System.exit(1);
         }
 
-        String jsonPath = "test_files/" + args[0] + ".json";
-        Logger.init(Boolean.parseBoolean(args[1]));
+//        String jsonPath = "test_files/" + args[0] + ".json";
+//        Logger.init(Boolean.parseBoolean(args[1]));
+        Logger.init(Boolean.parseBoolean(args[0]));
 
         SimInit init = new SimInit();
         init.setNumRuns(1);   // works only in batch mode
-        init.loadModel(new MedicalEmergencyHelicoptersLauncher(jsonPath), null, false);
+//        init.loadModel(new MedicalEmergencyHelicoptersLauncher(jsonPath), null, false);
+        init.loadModel(new MedicalEmergencyHelicoptersLauncher(), null, false);
 
     }
 
-    public int getMapWidth() {
-        return mapWidth;
-    }
-
-    public void setMapWidth(int mapWidth) {
-        this.mapWidth = mapWidth;
-    }
-
-    public int setMapLength() {
-        return mapLength;
-    }
-
-    public void setMapLength(int mapLength) {
-        this.mapLength = mapLength;
-    }
-
-    public int getNumPatients() {
-        return numPatients;
-    }
-
-    public void setNumPatients(int numPatients) {
-        this.numPatients = numPatients;
-    }
-
-    public int getNumHelicopters() {
-        return numHelicopters;
-    }
-
-    public void setNumHelicopters(int numHelicopters) {
-        this.numHelicopters = numHelicopters;
-    }
-
-    public int getNumHospitals() {
-        return numHospitals;
-    }
-
-    public void setNumHospitals(int numHospitals) {
-        this.numHospitals = numHospitals;
-    }
-
-    public int getMinPatientSeverity() {
-        return minPatientSeverity;
-    }
-
-    public void setMinPatientSeverity(int minPatientSeverity) {
-        this.minPatientSeverity = minPatientSeverity;
-    }
-
-    public int getMaxPatientSeverity() {
-        return maxPatientSeverity;
-    }
-
-    public void setMaxPatientSeverity(int maxPatientSeverity) {
-        this.maxPatientSeverity = maxPatientSeverity;
-    }
-
-    public int getMinHelicopterRange() {
-        return minHelicopterRange;
-    }
-
-    public void setMinHelicopterRange(int minHelicopterRange) {
-        this.minHelicopterRange = minHelicopterRange;
-    }
-
-    public int getMaxHelicopterRange() {
-        return maxHelicopterRange;
-    }
-
-    public void setMaxHelicopterRange(int maxHelicopterRange) {
-        this.maxHelicopterRange = maxHelicopterRange;
-    }
-
-    public int getMinHelicopterSpeed() {
-        return minHelicopterSpeed;
-    }
-
-    public void setMinHelicopterSpeed(int minHelicopterSpeed) {
-        this.minHelicopterSpeed = minHelicopterSpeed;
-    }
-
-    public int getMaxHelicopterSpeed() {
-        return maxHelicopterSpeed;
-    }
-
-    public void setMaxHelicopterSpeed(int maxHelicopterSpeed) {
-        this.maxHelicopterSpeed = maxHelicopterSpeed;
-    }
+    public void setMapWidth(int mapWidth) { this.mapWidth = mapWidth; }
+    public int getMapWidth() { return this.mapWidth; }
+    public void setMapLength(int mapLength) { this.mapLength = mapLength; }
+    public int getMapLength() { return this.mapLength; }
+    public void setNumPatients(int numPatients) { this.numPatients = numPatients; }
+    public int getNumPatients() { return this.numPatients; }
+    public void setNumHelicopters(int numHelicopters) { this.numHelicopters = numHelicopters; }
+    public int getNumHelicopters() { return this.numHelicopters; }
+    public void setNumHospitals(int numHospitals) { this.numHospitals = numHospitals; }
+    public int getNumHospitals() { return this.numHospitals; }
+    public void setMinHospitalCapacity(int minHospitalCapacity) { this.minHospitalCapacity = minHospitalCapacity; }
+    public int getMinHospitalCapacity() { return this.minHospitalCapacity; }
+    public void setMaxHospitalCapacity(int maxHospitalCapacity) { this.maxHospitalCapacity = maxHospitalCapacity; }
+    public int getMaxHospitalCapacity() { return this.maxHospitalCapacity; }
+    public void setMinHospitalOccupancy(int minHospitalOccupancy) { this.minHospitalOccupancy = minHospitalOccupancy; }
+    public int getMinHospitalOccupancy() { return this.minHospitalOccupancy; }
+    public void setMaxHospitalOccupancy(int maxHospitalOccupancy) { this.maxHospitalOccupancy = maxHospitalOccupancy; }
+    public int getMaxHospitalOccupancy() { return this.maxHospitalOccupancy; }
+    public void setMinPatientSeverity(int minPatientSeverity) { this.minPatientSeverity = minPatientSeverity; }
+    public int getMinPatientSeverity() { return this.minPatientSeverity; }
+    public void setMaxPatientSeverity(int maxPatientSeverity) { this.maxPatientSeverity = maxPatientSeverity; }
+    public int getMaxPatientSeverity() { return this.maxPatientSeverity; }
+    public void setMinHelicopterRange(int minHelicopterRange) { this.minHelicopterRange = minHelicopterRange; }
+    public int getMinHelicopterRange() { return this.minHelicopterRange; }
+    public void setMaxHelicopterRange(int maxHelicopterRange) { this.maxHelicopterRange = maxHelicopterRange; }
+    public int getMaxHelicopterRange() { return this.maxHelicopterRange; }
+    public void setMinHelicopterSpeed(int minHelicopterSpeed) { this.minHelicopterSpeed = minHelicopterSpeed; }
+    public int getMinHelicopterSpeed() { return this.minHelicopterSpeed; }
+    public void setMaxHelicopterSpeed(int maxHelicopterSpeed) { this.maxHelicopterSpeed = maxHelicopterSpeed; }
+    public int getMaxHelicopterSpeed() { return this.maxHelicopterSpeed; }
 
 }

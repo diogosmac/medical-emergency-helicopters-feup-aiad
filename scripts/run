@@ -3,19 +3,35 @@
 
 cp="build;jade/lib/jade.jar;lib/json-simple-1.1.1.jar;lib/junit-4.10.jar;lib/hamcrest-code-1.1.jar;lib/SAJaS.jar;repastj/repastj.jar"
 
-if [ $# -eq 1 ]
+#if [ $# -eq 1 ]
+#    then
+#        java -classpath $cp MedicalEmergencyHelicoptersLauncher "$1" false
+#        exit 0
+#elif [ $# -eq 2 ]
+#    then
+#        java -classpath $cp MedicalEmergencyHelicoptersLauncher "$1" "$2"
+#        exit 0
+#else
+#    echo "Usage:  $0 <json-file> [ <test> ]"
+#    echo ""
+#    echo "        json-file:  path to file (from test_files directory)"
+#    echo "                    containing helicopters, hospitals and patients"
+#    echo ""
+#    echo "        test:       FALSE (default) if logger should document execution"
+#    echo "                    TRUE if testing only (no logging)"
+#    exit 1
+#fi
+
+if [ $# -eq 0 ]
     then
-        java -classpath $cp MedicalEmergencyHelicoptersLauncher "$1" false
+        java -classpath $cp MedicalEmergencyHelicoptersLauncher false
         exit 0
-elif [ $# -eq 2 ]
+elif [ $# -eq 1 ]
     then
-        java -classpath $cp MedicalEmergencyHelicoptersLauncher "$1" "$2"
+        java -classpath $cp MedicalEmergencyHelicoptersLauncher "$1"
         exit 0
 else
-    echo "Usage:  $0 <json-file> [ <test> ]"
-    echo ""
-    echo "        json-file:  path to file (from test_files directory)"
-    echo "                    containing helicopters, hospitals and patients"
+    echo "Usage:  $0 [ <test> ]"
     echo ""
     echo "        test:       FALSE (default) if logger should document execution"
     echo "                    TRUE if testing only (no logging)"
