@@ -116,17 +116,17 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
         setNumHelicopters(random.nextInt(15));
         setNumHospitals(5);
         setMinHospitalCapacity(random.nextInt(numPatients / 2));
-        setMaxHospitalCapacity(random.nextInt(numPatients - minHospitalCapacity) + minHospitalCapacity);
+        setMaxHospitalCapacity(random.nextInt(numPatients - minHospitalCapacity + 1) + minHospitalCapacity);
         setMinHospitalOccupancy(random.nextInt(50));
-        setMaxHospitalOccupancy(random.nextInt(100 - minHospitalOccupancy) + minHospitalOccupancy);
+        setMaxHospitalOccupancy(random.nextInt(100 - minHospitalOccupancy + 1) + minHospitalOccupancy);
         setMinPatientSeverity(random.nextInt(50));
-        setMaxPatientSeverity(random.nextInt(100 - minPatientSeverity) + minPatientSeverity);
+        setMaxPatientSeverity(random.nextInt(100 - minPatientSeverity + 1) + minPatientSeverity);
         setMinHelicopterRange(random.nextInt(100));
-        setMaxHelicopterRange(random.nextInt(100 - minHelicopterRange) + minHelicopterRange);
+        setMaxHelicopterRange(random.nextInt(100 - minHelicopterRange + 1) + minHelicopterRange);
         setMinHelicopterSpeed(random.nextInt(15));
-        setMaxHelicopterSpeed(random.nextInt(50 - minHelicopterSpeed) + minHelicopterSpeed);
+        setMaxHelicopterSpeed(random.nextInt(50 - minHelicopterSpeed + 1) + minHelicopterSpeed);
         setMinPatientDelay(0);
-        setMaxPatientDelay(random.nextInt(20 - minPatientDelay) + minPatientDelay);
+        setMaxPatientDelay(random.nextInt(20 - minPatientDelay + 1) + minPatientDelay);
 
     }
 
