@@ -131,7 +131,7 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
         //for testing
         setNumPatients(50);
-        setNumHelicopters(5);
+        setNumHelicopters(15);
         setNumHospitals(5);
         setMinHospitalCapacity(20);
         setMaxHospitalCapacity(100);
