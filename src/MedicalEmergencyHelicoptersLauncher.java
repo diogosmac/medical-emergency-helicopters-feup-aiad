@@ -244,6 +244,8 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
                 return (double) sum / (double) treatedPatients;
             }
         });
+
+        // Average Treatment Quality
     }
 
     private void displayCharts() {
