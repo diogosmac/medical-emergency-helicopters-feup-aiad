@@ -79,9 +79,9 @@ public class ScenarioBuilder {
                     random.nextInt(mapWidth));
             String y = Integer.toString(
                     random.nextInt(mapLength));
-            int hosCapacity = random.nextInt(maxHospitalCapacity - minHospitalCapacity + 1) + maxHospitalCapacity;
+            int hosCapacity = random.nextInt(maxHospitalCapacity - minHospitalCapacity + 1) + minHospitalCapacity;
             int hosPatients = (
-                    random.nextInt(maxHospitalOccupancy - minHospitalOccupancy + 1) + maxHospitalOccupancy)
+                    random.nextInt(maxHospitalOccupancy - minHospitalOccupancy + 1) + minHospitalOccupancy)
                     * hosCapacity
                     / 100;
             String patients = Integer.toString(hosPatients);

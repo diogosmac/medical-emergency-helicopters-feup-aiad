@@ -132,6 +132,7 @@ public class HospitalAgent extends Agent {
 
             suitability = (int) (this.getLevelOfCompetenceForInjuryType(injuryType) * factor);
         }
+
         return 100 - suitability;
     }
 }

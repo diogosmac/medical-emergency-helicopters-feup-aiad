@@ -112,9 +112,10 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
         Random random = new Random(this.getRngSeed());
         setMapWidth(100);
         setMapLength(100);
-        setNumPatients(random.nextInt(50));
+
+        //random
+        /*setNumPatients(random.nextInt(50));
         setNumHelicopters(random.nextInt(15));
-        setNumHospitals(5);
         setMinHospitalCapacity(random.nextInt(numPatients / 2));
         setMaxHospitalCapacity(random.nextInt(numPatients - minHospitalCapacity + 1) + minHospitalCapacity);
         setMinHospitalOccupancy(random.nextInt(50));
@@ -126,8 +127,24 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
         setMinHelicopterSpeed(random.nextInt(15));
         setMaxHelicopterSpeed(random.nextInt(50 - minHelicopterSpeed + 1) + minHelicopterSpeed);
         setMinPatientDelay(0);
-        setMaxPatientDelay(random.nextInt(20 - minPatientDelay + 1) + minPatientDelay);
+        setMaxPatientDelay(random.nextInt(20 - minPatientDelay + 1) + minPatientDelay);*/
 
+        //for testing
+        setNumPatients(50);
+        setNumHelicopters(5);
+        setNumHospitals(5);
+        setMinHospitalCapacity(20);
+        setMaxHospitalCapacity(100);
+        setMinHospitalOccupancy(0);
+        setMaxHospitalOccupancy(100);
+        setMinPatientSeverity(1);;
+        setMaxPatientSeverity(100);
+        setMinHelicopterRange(30);
+        setMaxHelicopterRange(100);
+        setMinHelicopterSpeed(15);
+        setMaxHelicopterSpeed(50);
+        setMinPatientDelay(0);
+        setMaxPatientDelay(20);
     }
 
     @Override
@@ -263,14 +280,15 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
             public double getSValue() {
                 int sum = 0;
                 int treatedPatients = 0;
+
                 for (Map.Entry<AID, Integer> entry : resultsCollector.getTreatmentQualityForPatient().entrySet()) {
                     sum += entry.getValue();
                     treatedPatients++;
                 }
+
                 if (resultsCollector.getTreatmentQualityForPatient().size() == 0) {
                     return 0;
                 }
-
                 return (double) sum / (double) treatedPatients;
             }
         });
