@@ -41,7 +41,8 @@ public class ScenarioBuilder {
             int minHospitalOccupancy, int maxHospitalOccupancy,
             int minPatientSeverity, int maxPatientSeverity,
             int minHelicopterRange, int maxHelicopterRange,
-            int minHelicopterSpeed, int maxHelicopterSpeed) throws StaleProxyException {
+            int minHelicopterSpeed, int maxHelicopterSpeed,
+            int minPatientDelay, int maxPatientDelay) throws StaleProxyException {
         ScenarioBuilder.mapWidth = mapWidth;
         ScenarioBuilder.mapLength = mapLength;
         ScenarioBuilder.resultsCollector = resultsCollectorAID;
@@ -56,7 +57,8 @@ public class ScenarioBuilder {
                 minHelicopterSpeed, maxHelicopterSpeed);
         patientAgents = buildPatients(
                 patientContainer, numPatients,
-                minPatientSeverity, maxPatientSeverity);
+                minPatientSeverity, maxPatientSeverity,
+                minPatientDelay, maxPatientDelay);
 
         NodeGenerator.generateNodes(hospitalAgents, helicopterAgents, patientAgents);
         EdgeGenerator.generateEdges(hospitalAgents, helicopterAgents, patientAgents);
@@ -146,7 +148,8 @@ public class ScenarioBuilder {
 
     private static List<PatientAgent> buildPatients(
             ContainerController patientContainer, int numPatients,
-            int minPatientSeverity, int maxPatientSeverity) throws StaleProxyException {
+            int minPatientSeverity, int maxPatientSeverity,
+            int minPatientDelay, int maxPatientDelay) throws StaleProxyException {
 
         List<PatientAgent> agents = new ArrayList<>();
         Random random = new Random();
@@ -162,12 +165,15 @@ public class ScenarioBuilder {
             String type = vals[random.nextInt(vals.length)].toString();
             String severity = Integer.toString(
                     random.nextInt(maxPatientSeverity - minPatientSeverity) + minPatientSeverity);
+            String delay = Integer.toString(
+                    random.nextInt(maxPatientDelay - minPatientDelay) + minPatientDelay);
 
             List<String> argList = new ArrayList<>();
             argList.add(x);
             argList.add(y);
             argList.add(type);
             argList.add(severity);
+            argList.add(delay);
             String[] args = argList.toArray(String[]::new);
 
             PatientAgent pos = new PatientAgent(args);
