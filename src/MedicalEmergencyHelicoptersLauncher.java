@@ -17,6 +17,7 @@ import utils.ScenarioReader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
@@ -29,6 +30,18 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
     private ContainerController hospitalContainer;
     private ContainerController helicopterContainer;
     private ContainerController patientContainer;
+
+    private int mapWidth;
+    private int mapLength;
+    private int numPatients;
+    private int numHelicopters;
+    private int numHospitals;
+    private int minPatientSeverity;
+    private int maxPatientSeverity;
+    private int minHelicopterRange;
+    private int maxHelicopterRange;
+    private int minHelicopterSpeed;
+    private int maxHelicopterSpeed;
 
     private final String jsonPath;
 
@@ -54,7 +67,17 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
     @Override
     public String[] getInitParam() {
-        return new String[0];
+        return new String[]{
+            "numPatients",
+            "numHelicopters",
+            "numHospitals",
+            "minPatientSeverity",
+            "maxPatientSeverity",
+            "minHelicopterRange",
+            "maxHelicopterRange",
+            "minHelicopterSpeed",
+            "maxHelicopterSpeed"
+        };
     }
 
     @Override
@@ -68,6 +91,19 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
         // property descriptors
         // ...
+        Random random = new Random(this.getRngSeed());
+        setMapWidth(100);
+        setMapLength(100);
+        setNumPatients(random.nextInt(50));
+        setNumHelicopters(random.nextInt(15));
+        setNumHospitals(5);
+        setMinPatientSeverity(random.nextInt(50));
+        setMaxPatientSeverity(random.nextInt() % (100 - getMinPatientSeverity()) + getMinPatientSeverity());
+        setMinHelicopterRange(random.nextInt(100));
+        setMaxHelicopterRange(random.nextInt() % (100 - getMinHelicopterRange()) + getMinHelicopterRange());
+        setMinHelicopterSpeed(random.nextInt(15));
+        setMaxHelicopterSpeed(random.nextInt() % (50 - getMinHelicopterSpeed()) + getMinHelicopterSpeed());
+
     }
 
     @Override
@@ -203,8 +239,96 @@ public class MedicalEmergencyHelicoptersLauncher extends Repast3Launcher {
 
         SimInit init = new SimInit();
         init.setNumRuns(1);   // works only in batch mode
-        init.loadModel(new MedicalEmergencyHelicoptersLauncher(jsonPath), null, true);
+        init.loadModel(new MedicalEmergencyHelicoptersLauncher(jsonPath), null, false);
 
+    }
+
+    public int getMapWidth() {
+        return mapWidth;
+    }
+
+    public void setMapWidth(int mapWidth) {
+        this.mapWidth = mapWidth;
+    }
+
+    public int setMapLength() {
+        return mapLength;
+    }
+
+    public void setMapLength(int mapLength) {
+        this.mapLength = mapLength;
+    }
+
+    public int getNumPatients() {
+        return numPatients;
+    }
+
+    public void setNumPatients(int numPatients) {
+        this.numPatients = numPatients;
+    }
+
+    public int getNumHelicopters() {
+        return numHelicopters;
+    }
+
+    public void setNumHelicopters(int numHelicopters) {
+        this.numHelicopters = numHelicopters;
+    }
+
+    public int getNumHospitals() {
+        return numHospitals;
+    }
+
+    public void setNumHospitals(int numHospitals) {
+        this.numHospitals = numHospitals;
+    }
+
+    public int getMinPatientSeverity() {
+        return minPatientSeverity;
+    }
+
+    public void setMinPatientSeverity(int minPatientSeverity) {
+        this.minPatientSeverity = minPatientSeverity;
+    }
+
+    public int getMaxPatientSeverity() {
+        return maxPatientSeverity;
+    }
+
+    public void setMaxPatientSeverity(int maxPatientSeverity) {
+        this.maxPatientSeverity = maxPatientSeverity;
+    }
+
+    public int getMinHelicopterRange() {
+        return minHelicopterRange;
+    }
+
+    public void setMinHelicopterRange(int minHelicopterRange) {
+        this.minHelicopterRange = minHelicopterRange;
+    }
+
+    public int getMaxHelicopterRange() {
+        return maxHelicopterRange;
+    }
+
+    public void setMaxHelicopterRange(int maxHelicopterRange) {
+        this.maxHelicopterRange = maxHelicopterRange;
+    }
+
+    public int getMinHelicopterSpeed() {
+        return minHelicopterSpeed;
+    }
+
+    public void setMinHelicopterSpeed(int minHelicopterSpeed) {
+        this.minHelicopterSpeed = minHelicopterSpeed;
+    }
+
+    public int getMaxHelicopterSpeed() {
+        return maxHelicopterSpeed;
+    }
+
+    public void setMaxHelicopterSpeed(int maxHelicopterSpeed) {
+        this.maxHelicopterSpeed = maxHelicopterSpeed;
     }
 
 }
